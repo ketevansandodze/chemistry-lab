@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ka" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>მჟავებისა და ფუძეების სიძლიერე</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for chemistry icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        }
+        .glow-effect { animation: pulse-glow 3s infinite; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100 min-h-full flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <header class="border-b border-slate-800 bg-slate-900/85 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                    <i class="fa-solid fa-flask-vial text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">მჟავებისა და ფუძეების სიძლიერე</h1>
+                    <p class="text-xs text-slate-400">ელექტროლიტური დისოციაცია და ხსნარები</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-1 bg-slate-800/60 p-1.5 rounded-xl border border-slate-700">
+                <button onclick="switchTab('theory')" id="nav-theory" class="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow">თეორია</button>
+                <button onclick="switchTab('periodic')" id="nav-periodic" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white">კანონზომიერება</button>
+                <button onclick="switchTab('simulator')" id="nav-simulator" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white">დისოციაციის ლაბი</button>
+                <button onclick="switchTab('tasks')" id="nav-tasks" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white">ამოცანები & კითხვები</button>
+            </nav>
+            <div class="flex items-center space-x-3">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-1.5"></span>
+                    გაკვეთილი 1.10
+                </span>
+            </div>
+        </div>
+        <!-- Mobile nav bar -->
+        <div class="md:hidden flex overflow-x-auto space-x-1 px-4 pb-3 pt-1 border-t border-slate-800 bg-slate-900/90">
+            <button onclick="switchTab('theory')" id="mob-nav-theory" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap bg-indigo-600 text-white">თეორია</button>
+            <button onclick="switchTab('periodic')" id="mob-nav-periodic" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap text-slate-300">კანონზომიერება</button>
+            <button onclick="switchTab('simulator')" id="mob-nav-simulator" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap text-slate-300">ლაბორატორია</button>
+            <button onclick="switchTab('tasks')" id="mob-nav-tasks" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap text-slate-300">ამოცანები</button>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <section id="tab-theory" class="space-y-6">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-purple-950 to-slate-900 border border-indigo-500/30 p-8 shadow-2xl">
+                <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                    <i class="fa-solid fa-atom text-9xl"></i>
+                </div>
+                <div class="max-w-3xl">
+                    <span class="text-cyan-400 font-semibold text-sm uppercase tracking-wider">თემა 1: ელექტროლიტური დისოციაცია და ხსნარები</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-4">მჟავებისა და ფუძეების სიძლიერე</h2>
+                    <p class="text-slate-300 text-base sm:text-lg leading-relaxed mb-6">
+                        მჟავები კლასიფიცირდება, როგორც ძლიერი და სუსტი მჟავები. მჟავების სიძლიერე განისაზღვრება წყალხსნარში წარმოქმნილი წყალბად-იონების რაოდენობის მიხედვით. როგორც უკვე აღვნიშნეთ, ნივთიერება, რომელიც სრულად დისოცირდება იონებად, ძლიერი ელექტროლიტია. შესაბამისად, ძლიერი მჟავა სრულად დისოცირდება წყალბად-იონისა და შესაბამისი ანიონის წარმოქმნით, ხოლო სუსტი მჟავა - ნაწილობრივ.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-slate-900/60 p-5 rounded-2xl border border-cyan-500/20">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">1</div>
+                                <h3 class="font-bold text-white">ძლიერი მჟავები</h3>
+                            </div>
+                            <p class="text-sm text-slate-400">მარილმჟავა ძლიერი მჟავაა, ამიტომ მისი დისოციაციის პროცესი გამოისახება მხოლოდ ერთი ისრით: <br><code class="text-cyan-300 font-mono">HCl → H⁺ + Cl⁻</code></p>
+                        </div>
+                        <div class="bg-slate-900/60 p-5 rounded-2xl border border-indigo-500/20">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold">2</div>
+                                <h3 class="font-bold text-white">სუსტი მჟავები</h3>
+                            </div>
+                            <p class="text-sm text-slate-400">ძმარმჟავა კი სუსტი მჟავაა და მხოლოდ მისი მცირე ნაწილი დისოცირდება, დანარჩენი რჩება მოლეკულის სახით. პროცესი შექცევადია: <br><code class="text-indigo-300 font-mono">CH₃COOH ⇌ CH₃COO⁻ + H⁺</code></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dissociation Constant Ka -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">დისოციაციის მუდმივა (Ka)</h3>
+                        <p class="text-sm text-slate-400 mb-4">
+                            მჟავას სიძლიერის უფრო ზუსტად დასახასიათებლად გამოიყენება დისოციაციის მუდმივა, რომელიც წონასწორობის მუდმივას წარმოადგენს და ახასიათებს სუსტ ელექტროლიტებს (<span class="text-emerald-400 font-mono">Ka</span>).
+                        </p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-emerald-500/20 text-center">
+                        <span class="text-xs text-slate-400 block mb-2">ფორმულა:</span>
+                        <div class="text-emerald-400 font-mono font-bold text-base sm:text-lg overflow-x-auto py-1">
+                            Ka = ([CH₃COO⁻] · [H⁺]) / [CH₃COOH]
+                        </div>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">კვადრატულ ფრჩხილებში მოცემულია თითოეული ნაწილაკის მოლური კონცენტრაცია წონასწორობის მომენტში.</p>
+                    </div>
+                </div>
+
+                <!-- Modern Hydronium Ion Concept -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-water"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">წყალხსნარები და ჰიდროქსონიუმი</h3>
+                        <p class="text-sm text-slate-400 mb-4">
+                            თუ HA არის ძლიერი მჟავა, ის სრულად არის დისოცირებული და წყალხსნარში წარმოდგენილია მხოლოდ <code class="text-purple-300 font-mono">H⁺ (H₃O⁺)</code> და <code class="text-purple-300 font-mono">A⁻</code> ის სახით.
+                        </p>
+                    </div>
+                    <div class="space-y-2 text-xs font-mono bg-slate-950 p-4 rounded-xl border border-purple-500/20 text-purple-300">
+                        <div>HA(წყ) + H₂O(თხ) → H₃O⁺(წყ) + A⁻(წყ) (<span class="text-emerald-400">~100% დისოცირებული</span>)</div>
+                        <div>HA(წყ) + H₂O(თხ) ⇌ H₃O⁺(წყ) + A⁻(წყ) (<span class="text-amber-400">მცირე % დისოცირებული</span>)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bases and Hydroxides -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+                <h3 class="text-xl font-bold text-white mb-3"><i class="fa-solid fa-flask text-cyan-400 mr-2"></i>ტუტეების (ფუძეების) სიძლიერე</h3>
+                <p class="text-sm text-slate-300 mb-4">
+                    ტუტეების სიძლიერე განისაზღვრება წყალხსნარში წარმოქმნილი ჰიდროქსიდ-იონების (<code class="text-cyan-300 font-mono">OH⁻</code>) რაოდენობით. ძლიერი ფუძე (ტუტე) წყალხსნარში სრულად დისოცირდება მეტალის კატიონისა და ჰიდროქსიდ-იონების წარმოქმნით.
+                </p>
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-amber-300 mb-4">
+                    KOH(მჟ) <span class="text-slate-400">--H₂O--></span> K⁺(წყ) + OH⁻(წყ)
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    ძლიერი ტუტეები გამოიყენება ცხიმოვანი ნადგაბის (ნადების) სანწმენდი სითხეების დასამზადებლად. მათში მაღალია ჰიდროქსიდ-იონების კონცენტრაცია, ამიტომ მათი გამოყენების დროს საჭიროა სიფრთხილე.
+                </p>
+            </div>
+        </section>
+
+        <section id="tab-periodic" class="hidden space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+                <div class="max-w-2xl mb-6">
+                    <span class="text-cyan-400 font-semibold text-sm uppercase tracking-wider">პერიოდული კანონზომიერებები</span>
+                    <h2 class="text-3xl font-extrabold text-white mt-1 mb-2">როგორ იცვლება მჟავური და ფუძური თვისებები?</h2>
+                    <p class="text-slate-400 text-sm">მჟავა მით უფრო ძლიერია, რაც უფრო ადვილად გასცემს წყალბადის კატიონს ელექტროლიტური დისოციაციის დროს.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Non-metal hydrides -->
+                    <div class="bg-slate-950/70 p-6 rounded-2xl border border-slate-800">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold mb-3">1</div>
+                        <h3 class="font-bold text-white text-base mb-2">არამეტალების წყალბადნაერთები</h3>
+                        <p class="text-sm text-slate-300 mb-4">
+                            პერიოდში მარცხნიდან მარჯვნივ იზრდება მჟავური თვისებები. ჰალოგენწყალბადების შემთხვევაში მჟავური სიძლიერე ზემოდან ქვემოთ იზრდება რადიუსის ზრდასთან ერთად.
+                        </p>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs font-mono text-cyan-300 mb-2">
+                            მესამე პერიოდი: SiH₄ < PH₃ < H₂S < HCl
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs font-mono text-cyan-300">
+                            ჰალოგენწყალბადები: HF < HCl < HBr < HI
+                        </div>
+                    </div>
+
+                    <!-- Oxygen containing acids -->
+                    <div class="bg-slate-950/70 p-6 rounded-2xl border border-slate-800">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold mb-3">2</div>
+                        <h3 class="font-bold text-white text-base mb-2">ჟანგბადშემცველი მჟავები (HₙXOₘ)</h3>
+                        <p class="text-sm text-slate-300 mb-4">
+                            ცენტრალურ ატომთან დაკავშირებული თავისუფალი ჟანგბადის ატომების რიცხვი (<span class="text-indigo-300 font-mono">m - n</span>) განსაზღვრავს მჟავის სიძლიერეს:
+                        </p>
+                        <div class="space-y-2 text-xs font-mono text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <div>m - n = 0: სუსტია (HClO, H₃BO₃)</div>
+                            <div>m - n = 1: საშუალოა (HNO₂, H₂SO₃)</div>
+                            <div>m - n = 2: ძლიერია (HNO₃, H₂SO₄)</div>
+                            <div>m - n = 3: ძალიან ძლიერია (HClO₄, HMnO₄)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Periodic interactive tester -->
+                <div class="bg-gradient-to-r from-indigo-950/60 to-purple-950/60 p-6 rounded-2xl border border-indigo-500/30">
+                    <h3 class="font-bold text-white text-base mb-3"><i class="fa-solid fa-microscope text-cyan-400 mr-2"></i>ინტერაქტიული შედარების ტესტერი</h3>
+                    <p class="text-xs text-slate-300 mb-4">აირჩიეთ წყვილი და შეამოწმეთ კანონზომიერება:</p>
+                    
+                    <div class="flex flex-wrap gap-3 mb-4">
+                        <button onclick="checkComparison('HCl', 'CH3COOH')" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl text-xs font-medium transition-all text-slate-200">
+                            HCl vs CH₃COOH
+                        </button>
+                        <button onclick="checkComparison('HBr', 'HI')" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl text-xs font-medium transition-all text-slate-200">
+                            HBr vs HI
+                        </button>
+                        <button onclick="checkComparison('HNO3', 'HClO')" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl text-xs font-medium transition-all text-slate-200">
+                            HNO₃ vs HClO
+                        </button>
+                    </div>
+                    <div id="comparison-result" class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm text-slate-300">
+                        აირჩიეთ წყვილი ზემოთ მოცემული ღილაკებიდან...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-simulator" class="hidden space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+                <div class="max-w-2xl mb-6">
+                    <span class="text-cyan-400 font-semibold text-sm uppercase tracking-wider">ვირტუალური ლაბორატორია</span>
+                    <h2 class="text-3xl font-extrabold text-white mt-1 mb-2">დისოციაციის ვიზუალური ანიმაცია (ნახ. 1.25 & 1.26)</h2>
+                    <p class="text-slate-400 text-sm">შეადარეთ ძლიერი და სუსტი მჟავების იონებად დაშლა და ბალანსი.</p>
+                </div>
+
+                <!-- Substance Selector Tabs -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <button onclick="selectSubstance('HCl')" id="sub-HCl" class="px-4 py-2.5 rounded-xl font-medium text-sm transition-all bg-indigo-600 text-white shadow">
+                        HCl (მარილმჟავა - ძლიერი)
+                    </button>
+                    <button onclick="selectSubstance('CH3COOH')" id="sub-CH3COOH" class="px-4 py-2.5 rounded-xl font-medium text-sm transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        CH₃COOH (ძმარმჟავა - სუსტი)
+                    </button>
+                    <button onclick="selectSubstance('NaOH')" id="sub-NaOH" class="px-4 py-2.5 rounded-xl font-medium text-sm transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        NaOH (ნატრიუმის ტუტე)
+                    </button>
+                </div>
+
+                <!-- Lab Container & Visualizer -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-slate-950/80 rounded-2xl border border-slate-800 p-6 flex flex-col justify-between relative overflow-hidden min-h-[350px]">
+                        <div class="absolute top-4 right-4 z-10 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700 text-xs text-slate-300 font-mono" id="sub-formula-tag">
+                            HCl → H⁺ + Cl⁻
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base mb-1" id="sim-title">მარილმჟავა (HCl)</h3>
+                            <p class="text-xs text-slate-400 mb-6" id="sim-desc">ძლიერი მჟავა. წყალში სრულად იშლება წყალბადის კატიონებად და ქლორიდის ანიონებად.</p>
+                        </div>
+                        
+                        <!-- Animated Particle Box -->
+                        <div id="particle-box" class="w-full h-48 bg-slate-900/60 rounded-xl border border-slate-800 relative overflow-hidden flex flex-wrap items-center justify-center p-4 gap-3">
+                            <!-- Particles injected via JS -->
+                        </div>
+
+                        <div class="mt-4 flex items-center justify-between text-xs text-slate-400">
+                            <span id="dissociation-rate-label">დისოციაციის ხარისხი: ~100% (სრული)</span>
+                            <button onclick="runSimulation()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-medium rounded-xl transition-all shadow-lg shadow-cyan-600/30">
+                                <i class="fa-solid fa-rotate mr-1"></i> ხელახლა შერევა
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Lab Analysis Panel -->
+                    <div class="bg-slate-950/80 rounded-2xl border border-slate-800 p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-white text-base mb-4 flex items-center">
+                                <i class="fa-solid fa-microscope text-cyan-400 mr-2"></i> ლაბორატორიული ანალიზი
+                            </h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                                    <span class="text-xs text-slate-400 block">პროცესის ისარი</span>
+                                    <span id="analysis-arrow" class="font-semibold text-cyan-300">მხოლოდ ერთი ისარი (→)</span>
+                                </div>
+                                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                                    <span class="text-xs text-slate-400 block">ელექტროლიტის ტიპი</span>
+                                    <span id="analysis-strength" class="font-semibold text-emerald-400">ძლიერი ელექტროლიტი</span>
+                                </div>
+                                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                                    <span class="text-xs text-slate-400 block">ხსნარის არე</span>
+                                    <span id="analysis-cond" class="font-semibold text-yellow-400">მაღალი კონდუქტომეტრია</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400">
+                            <i class="fa-solid fa-lightbulb text-amber-400 mr-1"></i> <b>რჩევა:</b> სუსტ მჟავებში წონასწორობა გადახრილია არადისოცირებული მოლეკულების მხარეს.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-tasks" class="hidden space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <span class="text-cyan-400 font-semibold text-sm uppercase tracking-wider">სახელმძღვანელოს სავარჯიშოები</span>
+                        <h2 class="text-2xl font-extrabold text-white mt-1">კითხვები და დავალებები</h2>
+                    </div>
+                    <div class="text-xs font-mono px-3 py-1.5 rounded-xl bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                        თავი 1.10
+                    </div>
+                </div>
+
+                <div class="space-y-4" id="tasks-container">
+                    <!-- Task 1 -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="font-bold text-white text-sm">1. დააკვირდით 1.25 ნახაზს. რატომ არის აუცილებელი შედარებისათვის ერთი და იმავე კონცენტრაციის ხსნარების გამოყენება?</h3>
+                            <button onclick="toggleAnswer('ans-1')" class="text-xs text-cyan-400 hover:text-cyan-300 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 whitespace-nowrap ml-2">პასუხის ნახვა</button>
+                        </div>
+                        <p id="ans-1" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800 leading-relaxed">
+                            <b>პასუხი:</b> იმისათვის, რომ ნივთიერებების სიძლიერე (დისოციაციის ხარისხი) სწორად შევადაროთ, საწყისი მოლური კონცენტრაცია აუცილებლად თანაბარი უნდა იყოს, ვინაიდან დისოციაციის მუდმივა და იონების რაოდენობა პირდაპირ არის დამოკიდებული ხსნარის კონცენტრაციაზე.
+                        </p>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="font-bold text-white text-sm">2. შეადარეთ ერთმანეთს დისოციაციის ხარისხი და მუდმივა.</h3>
+                            <button onclick="toggleAnswer('ans-2')" class="text-xs text-cyan-400 hover:text-cyan-300 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 whitespace-nowrap ml-2">პასუხის ნახვა</button>
+                        </div>
+                        <p id="ans-2" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800 leading-relaxed">
+                            <b>პასუხი:</b> დისოციაციის ხარისხი დამოკიდებულია ხსნარის კონცენტრაციაზე (განზავებისას ის იზრდება), ხოლო დისოციაციის მუდმივა (Ka) კონცენტრაციაზე არ არის დამოკიდებული — ის მუდმივი величинаა მოცემული ტემპერატურისათვის და ახასიათებს სუსტ ელექტროლიტებს.
+                        </p>
+                    </div>
+
+                    <!-- Task 3 -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="font-bold text-white text-sm">3. მოცემულია ქლორის მჟავები: a) HClO, b) HClO₂, c) HClO₃, d) HClO₄. დაასახელეთ ყველაზე ძლიერი და სუსტი.</h3>
+                            <button onclick="toggleAnswer('ans-3')" class="text-xs text-cyan-400 hover:text-cyan-300 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 whitespace-nowrap ml-2">პასუხის ნახვა</button>
+                        </div>
+                        <p id="ans-3" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800 leading-relaxed">
+                            <b>პასუხი:</b> ყველაზე ძლიერია პერქლორმჟავა <b>HClO₄</b> (სადაც m - n = 3), ხოლო ყველაზე სუსტია ჰიპოქლორმჟავა <b>HClO</b> (სადაც m - n = 0). თავისუფალი ჟანგბადის ატომების მეტი რიცხვი ზრდის O-H ბმის პოლარიზაციას.
+                        </p>
+                    </div>
+
+                    <!-- Task 4 -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="font-bold text-white text-sm">4. შეადარეთ მჟავათა სიძლიერე: ა) გოგირდწყალბადმჟავა და სელენწყალბადმჟავა; ბ) სელენწყალბადმჟავა და ბრომწყალბადმჟავა.</h3>
+                            <button onclick="toggleAnswer('ans-4')" class="text-xs text-cyan-400 hover:text-cyan-300 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 whitespace-nowrap ml-2">პასუხის ნახვა</button>
+                        </div>
+                        <p id="ans-4" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800 leading-relaxed">
+                            <b>პასუხი:</b> ა) სელენწყალბადმჟავა (H₂Se) უფრო ძლიერია, ვიდრე გოგირდწყალბადმჟავა (H₂S), რადგან სელენის ატომის რადიუსი უფრო დიდია და წყალბადის მოწყვეტა უფრო ადვილია. ბ) ანალოგიურად, ჯგუფში ქვემოთ სელენწყალბადმჟავაზე ძლიერია ბრომწყალბადმჟავა (HBr).
+                        </p>
+                    </div>
+
+                    <!-- Task 5 -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="font-bold text-white text-sm">5. შეადარეთ ჰიდროქსიდების სიძლიერე: ა) ნატრიუმის და მაგნიუმის ჰიდროქსიდი; ბ) ლითიუმის და კალიუმის ჰიდროქსიდი.</h3>
+                            <button onclick="toggleAnswer('ans-5')" class="text-xs text-cyan-400 hover:text-cyan-300 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 whitespace-nowrap ml-2">პასუხის ნახვა</button>
+                        </div>
+                        <p id="ans-5" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800 leading-relaxed">
+                            <b>პასუხი:</b> ა) NaOH უფრო ძლიერი ტუტეა, ვიდრე Mg(OH)₂, ვინაიდან ნატრიუმის კატიონს ნაკლები მუხტი და მეტი რადიუსი აქვს. ბ) კალიუმის ჰიდროქსიდი (KOH) უფრო ძლიერია, ვიდრე ლითიუმის ჰიდროქსიდი (LiOH), რადგან ჯგუფში ზემოდან ქვემოთ ტუტეების სიძლიერე იზრდება.
+                        </p>
+                    </div>
+
+                    <!-- Task 6 -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="font-bold text-white text-sm">6. გააანალიზეთ ნახ. 1.26 და შეადგინეთ სუსტი და ძლიერი მჟავების დისოციაციის ტოლობები.</h3>
+                            <button onclick="toggleAnswer('ans-6')" class="text-xs text-cyan-400 hover:text-cyan-300 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 whitespace-nowrap ml-2">პასუხის ნახვა</button>
+                        </div>
+                        <p id="ans-6" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800 leading-relaxed">
+                            <b>პასუხი:</b> ძლიერი მჟავა (მაგ. HCl): <code class="text-cyan-300 font-mono">HCl + H₂O → H₃O⁺ + Cl⁻</code> (სრული დისოციაცია, ~100%). სუსტი მჟავა (მაგ. CH₃COOH): <code class="text-indigo-300 font-mono">CH₃COOH + H₂O ⇌ H₃O⁺ + CH₃COO⁻</code> (შექცევადი პროცესი, მცირე % დისოცირებული).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800 bg-slate-900/80 text-center py-4 text-xs text-slate-500">
+        ქიმიის ინტერაქტიული გაკვეთილი &bull; მჟავებისა და ფუძეების სიძლიერე (თავი 1.10)
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            const tabs = ['theory', 'periodic', 'simulator', 'tasks'];
+            tabs.forEach(t => {
+                const sec = document.getElementById('tab-' + t);
+                if (sec) sec.classList.add('hidden');
+                
+                const btnDesktop = document.getElementById('nav-' + t);
+                const btnMobile = document.getElementById('mob-nav-' + t);
+                if(btnDesktop) {
+                    btnDesktop.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white";
+                }
+                if(btnMobile) {
+                    btnMobile.className = "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap text-slate-300";
+                }
+            });
+
+            const activeSec = document.getElementById('tab-' + tabId);
+            if (activeSec) activeSec.classList.remove('hidden');
+
+            const activeDesktop = document.getElementById('nav-' + tabId);
+            const activeMobile = document.getElementById('mob-nav-' + tabId);
+            if(activeDesktop) {
+                activeDesktop.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow";
+            }
+            if(activeMobile) {
+                activeMobile.className = "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap bg-indigo-600 text-white";
+            }
+        }
+
+        function toggleAnswer(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function checkComparison(acid1, acid2) {
+            const res = document.getElementById('comparison-result');
+            if (!res) return;
+            if(acid1 === 'HCl' && acid2 === 'CH3COOH') {
+                res.innerHTML = `<b>შედეგი:</b> <b>HCl</b> უფრო ძლიერი მჟავაა, ვიდრე <b>CH₃COOH</b>. მარილმჟავა სრულად დისოცირდება (ერთარხიანი ისარი), ხოლო ძმარმჟავა სუსტია და ნაწილობრივ დისოცირდება.`;
+            } else if(acid1 === 'HBr' && acid2 === 'HI') {
+                res.innerHTML = `<b>შედეგი:</b> ჯგუფში ზემოდან ქვემოთ მჟავური თვისებები ძლიერდება იოდის ატომის დიდი რადიუსის გამო, ამიტომ <b>HI</b> უფრო ძლიერი მჟავაა, ვიდრე <b>HBr</b>.`;
+            } else if(acid1 === 'HNO3' && acid2 === 'HClO') {
+                res.innerHTML = `<b>შედეგი:</b> <b>HNO₃</b> უფრო ძლიერი მჟავაა (m - n = 2), ვიდრე ჰიპოქლორმჟავა <b>HClO</b> (m - n = 0), რადგან ჟანგბადის მეტი ატომი ზრდის O-H ბმის პოლარიზაციას.`;
+            }
+        }
+
+        let currentSubstance = 'HCl';
+
+        const substanceData = {
+            'HCl': {
+                title: "მარილმჟავა (HCl)",
+                formula: "HCl → H⁺ + Cl⁻",
+                desc: "ძლიერი მჟავა. წყალში სრულად იშლება პროტონებად და ქლორიდის იონებად (მხოლოდ ერთი ისარი).",
+                arrow: "მხოლოდ ერთი ისარი (→)",
+                strength: "ძლიერი ელექტროლიტი (~100%)",
+                cond: "ძალიან მაღალი კონდუქტომეტრია",
+                particles: [
+                    { type: 'H+', color: 'bg-red-500 text-white', label: 'H⁺' },
+                    { type: 'Cl-', color: 'bg-cyan-500 text-white', label: 'Cl⁻' },
+                    { type: 'H+', color: 'bg-red-500 text-white', label: 'H⁺' },
+                    { type: 'Cl-', color: 'bg-cyan-500 text-white', label: 'Cl⁻' },
+                    { type: 'H+', color: 'bg-red-500 text-white', label: 'H⁺' },
+                    { type: 'Cl-', color: 'bg-cyan-500 text-white', label: 'Cl⁻' }
+                ]
+            },
+            'CH3COOH': {
+                title: "ძმარმჟავა (CH₃COOH)",
+                formula: "CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+                desc: "სუსტი მჟავა. ნაწილობრივ დისოცირდება, პროცესი შექცევადია (ორი ურთიერთწინააღმდეგი ისარი).",
+                arrow: "შექცევადი ისრები (⇌)",
+                strength: "სუსტი ელექტროლიტი (~1%)",
+                cond: "დაბალი (სუსტი ნათება)",
+                particles: [
+                    { type: 'mol', color: 'bg-slate-700 text-slate-300', label: 'CH₃COOH' },
+                    { type: 'mol', color: 'bg-slate-700 text-slate-300', label: 'CH₃COOH' },
+                    { type: 'mol', color: 'bg-slate-700 text-slate-300', label: 'CH₃COOH' },
+                    { type: 'H+', color: 'bg-red-500 text-white', label: 'H⁺' },
+                    { type: 'Ac-', color: 'bg-indigo-500 text-white', label: 'CH₃COO⁻' },
+                    { type: 'mol', color: 'bg-slate-700 text-slate-300', label: 'CH₃COOH' }
+                ]
+            },
+            'NaOH': {
+                title: "ნატრიუმის ტუტე (NaOH)",
+                formula: "NaOH → Na⁺ + OH⁻",
+                desc: "ძლიერი ტუტე. წყალში სრულად იშლება მეტალის კატიონად და ჰიდროქსიდ-იონად.",
+                arrow: "მხოლოდ ერთი ისარი (→)",
+                strength: "ძლიერი ელექტროლიტი (ტუტე)",
+                cond: "ძალიან მაღალი",
+                particles: [
+                    { type: 'Na+', color: 'bg-amber-500 text-white', label: 'Na⁺' },
+                    { type: 'OH-', color: 'bg-blue-500 text-white', label: 'OH⁻' },
+                    { type: 'Na+', color: 'bg-amber-500 text-white', label: 'Na⁺' },
+                    { type: 'OH-', color: 'bg-blue-500 text-white', label: 'OH⁻' },
+                    { type: 'Na+', color: 'bg-amber-500 text-white', label: 'Na⁺' },
+                    { type: 'OH-', color: 'bg-blue-500 text-white', label: 'OH⁻' }
+                ]
+            }
+        };
+
+        function selectSubstance(subKey) {
+            currentSubstance = subKey;
+            ['HCl', 'CH3COOH', 'NaOH'].forEach(k => {
+                const btn = document.getElementById('sub-' + k);
+                if (!btn) return;
+                if (k === subKey) {
+                    btn.className = "px-4 py-2.5 rounded-xl font-medium text-sm transition-all bg-indigo-600 text-white shadow";
+                } else {
+                    btn.className = "px-4 py-2.5 rounded-xl font-medium text-sm transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+                }
+            });
+            runSimulation();
+        }
+
+        function runSimulation() {
+            const data = substanceData[currentSubstance];
+            if (!data) return;
+            const simTitle = document.getElementById('sim-title');
+            const simDesc = document.getElementById('sim-desc');
+            const formulaTag = document.getElementById('sub-formula-tag');
+            const arrowEl = document.getElementById('analysis-arrow');
+            const strengthEl = document.getElementById('analysis-strength');
+            const condEl = document.getElementById('analysis-cond');
+
+            if (simTitle) simTitle.innerText = data.title;
+            if (simDesc) simDesc.innerText = data.desc;
+            if (formulaTag) formulaTag.innerText = data.formula;
+            if (arrowEl) arrowEl.innerText = data.arrow;
+            if (strengthEl) strengthEl.innerText = data.strength;
+            if (condEl) condEl.innerText = data.cond;
+
+            const box = document.getElementById('particle-box');
+            if (box) {
+                box.innerHTML = data.particles.map((p, idx) => `
+                    <div class="px-3.5 py-2 rounded-xl text-xs font-mono font-bold ${p.color} shadow-md animate-bounce" style="animation-duration: ${2 + (idx%3)*0.5}s;">
+                        ${p.label}
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.onload = function() {
+            runSimulation();
+        };
+    </script>
+</body>
+</html>
