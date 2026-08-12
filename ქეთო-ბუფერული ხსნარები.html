@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ka" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ბუფერული ხსნარები - ინტერაქტიული ლაბორატორია</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.02); }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-950 text-slate-100 font-sans antialiased flex flex-col overflow-x-hidden">
+
+    <!-- Header / Navigation -->
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-4 lg:px-8 py-3 flex items-center justify-between shadow-xl">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <i class="fa-solid fa-flask-vial text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-white tracking-wide">ბუფერული ხსნარები</h1>
+                <p class="text-xs text-slate-400">ელექტროლიტური დისოციაცია და ხსნარები</p>
+            </div>
+        </div>
+        <nav class="flex items-center space-x-2 sm:space-x-4">
+            <button onclick="switchTab('sim')" id="btn-sim" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-medium transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center space-x-2">
+                <i class="fa-solid fa-atom"></i> <span class="hidden sm:inline">ვირტუალური ექსპერიმენტი</span>
+            </button>
+            <button onclick="switchTab('theory')" id="btn-theory" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800 flex items-center space-x-2">
+                <i class="fa-solid fa-book-open"></i> <span class="hidden sm:inline">თეორია & სისხლი</span>
+            </button>
+            <button onclick="switchTab('quiz')" id="btn-quiz" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800 flex items-center space-x-2">
+                <i class="fa-solid fa-circle-question"></i> <span class="hidden sm:inline">კითხვები & დავალებები</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+
+        <!-- SECTION 1: VIRTUAL EXPERIMENT (FIG 1.32 SIMULATION) -->
+        <section id="tab-sim" class="tab-content flex-1 flex flex-col space-y-6">
+            <div class="glass-card rounded-2xl p-6 shadow-2xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-flask text-cyan-400"></i>
+                            <span>ბუფერული ხსნარის შედარება სუფთა წყალთან</span>
+                        </h2>
+                        <p class="text-sm text-slate-400 mt-1">დაამატეთ მჟავა (HCl) ან ტუტე (NaOH) და დააკვირდით როგორ იცვლება pH-ის მნიშვნელობა სუფთა წყალსა და აცეტატურ ბუფერში!</p>
+                    </div>
+                    <button onclick="resetExperiment()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl text-sm font-semibold transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-rotate-right"></i> <span>თავიდან დაწყება</span>
+                    </button>
+                </div>
+
+                <!-- Simulation Arena (2 columns: Water vs Buffer) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- COLUMN 1: PURE WATER -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-inner">
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold text-base text-cyan-300 flex items-center space-x-2">
+                                    <i class="fa-solid fa-droplet text-blue-400"></i>
+                                    <span>სუფთა წყალი (H₂O)</span>
+                                </h3>
+                                <div class="px-3 py-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-full text-xs font-semibold">
+                                    არ გააჩნია ბუფერული თვისება
+                               </div>
+                            </div>
+
+                            <!-- pH Meter Display -->
+                            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center justify-between mb-6 shadow-md">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs uppercase font-mono tracking-wider text-slate-400">pH-მეტრი:</span>
+                                    <span id="water-ph-disp" class="text-3xl font-extrabold font-mono text-cyan-400 transition-all duration-300">7.0</span>
+                                </div>
+                                <div id="water-badge" class="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                    ნეტრალური
+                                </div>
+                            </div>
+
+                            <!-- Beaker Visual -->
+                            <div class="relative h-44 w-full bg-slate-950/60 rounded-xl border border-slate-800 flex items-end justify-center overflow-hidden mb-6 p-4">
+                                <div id="water-liquid" class="w-3/4 h-28 rounded-t-xl transition-all duration-500 bg-blue-500/30 border-t-2 border-blue-400/50 flex items-center justify-center relative">
+                                    <div id="water-particles" class="text-xs text-blue-200/80 font-mono text-center">H₂O მოლეკულები</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Controls for Water -->
+                        <div class="space-y-3">
+                            <div class="text-xs text-slate-400 font-medium">დაამატეთ რეაგენტი:</div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="addReagent('water', 'acid')" class="py-3 px-4 bg-red-600/20 hover:bg-red-600/30 border border-red-500/40 text-red-300 rounded-xl text-sm font-bold transition-all shadow-md flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> <span>+ ძლიერი მჟავა (HCl)</span>
+                                </button>
+                                <button onclick="addReagent('water', 'base')" class="py-3 px-4 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/40 text-purple-300 rounded-xl text-sm font-bold transition-all shadow-md flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-circle-dot"></i> <span>+ ძლიერი ტუტე (NaOH)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUMN 2: BUFFER SOLUTION -->
+                    <div class="bg-slate-900/80 border border-indigo-500/40 rounded-2xl p-6 flex flex-col justify-between shadow-inner relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold base text-indigo-300 flex items-center space-x-2">
+                                    <i class="fa-solid fa-shield-halved text-indigo-400"></i>
+                                    <span>აცეტატური ბუფერი (CH₃COOH + CH₃COONa)</span>
+                                </h3>
+                                <div class="px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-full text-xs font-semibold">
+                                    ინარჩუნებს pH-ს!
+                                </div>
+                            </div>
+
+                            <!-- pH Meter Display -->
+                            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center justify-between mb-6 shadow-md">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs uppercase font-mono tracking-wider text-slate-400">pH-მეტრი:</span>
+                                    <span id="buffer-ph-disp" class="text-3xl font-extrabold font-mono text-indigo-400 transition-all duration-300">4.75</span>
+                                </div>
+                                <div id="buffer-badge" class="px-3 py-1 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                    მჟავე ბუფერი
+                                </div>
+                            </div>
+
+                            <!-- Beaker Visual -->
+                            <div class="relative h-44 w-full bg-slate-950/60 rounded-xl border border-slate-800 flex items-end justify-center overflow-hidden mb-6 p-4">
+                                <div id="buffer-liquid" class="w-3/4 h-28 rounded-t-xl transition-all duration-500 bg-indigo-600/30 border-t-2 border-indigo-400/50 flex items-center justify-center relative">
+                                    <div id="buffer-particles" class="text-xs text-indigo-200/80 font-mono text-center">CH₃COOH + CH₃COO⁻</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Controls for Buffer -->
+                        <div class="space-y-3">
+                            <div class="text-xs text-slate-400 font-medium">დაამატეთ რეაგენტი:</div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="addReagent('buffer', 'acid')" class="py-3 px-4 bg-red-600/20 hover:bg-red-600/30 border border-red-500/40 text-red-300 rounded-xl text-sm font-bold transition-all shadow-md flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> <span>+ ძლიერი მჟავა (HCl)</span>
+                                </button>
+                                <button onclick="addReagent('buffer', 'base')" class="py-3 px-4 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/40 text-purple-300 rounded-xl text-sm font-bold transition-all shadow-md flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-circle-dot"></i> <span>+ ძლიერი ტუტე (NaOH)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Live Log / Explanation Box -->
+                <div id="experiment-log" class="mt-6 p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-300 font-mono">
+                    <i class="fa-solid fa-circle-info text-cyan-400 mr-2"></i> <b>ექსპერიმენტის სტატუსი:</b> სისტემა მზადაა. დაამატეთ მჟავა ან ტუტე მარცხენა და მარჯვენა ჭურჭელში განსხვავების დასანახად.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THEORY & BLOOD BUFFER -->
+        <section id="tab-theory" class="tab-content hidden flex-1 flex flex-col space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Main Theory Card -->
+                <div class="lg:col-span-2 glass-card rounded-2xl p-6 shadow-2xl space-y-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center space-x-2 mb-2">
+                            <i class="fa-solid fa-book-bookmark text-cyan-400"></i>
+                            <span>რა არის ბუფერული ხსნარი?</span>
+                        </h2>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            <b>ბუფერი არის ხსნარი, რომელიც ინარჩუნებს pH-ს მცირე რაოდენობით ძლიერი მჟავას ან ტუტეს დამატებისას.</b> ბუფერი უნდა შედგებოდეს ორი კომპონენტისგან:
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-cyan-400 font-bold mb-1 flex items-center space-x-2">
+                                <i class="fa-solid fa-vial"></i> <span>ვარიანტი 1</span>
+                            </div>
+                            <p class="text-xs text-slate-300">სუსტი მჟავა და მისი შესაბამისი მარილის ნარევი.</p>
+                            <div class="mt-2 text-xs font-mono text-indigo-300 bg-slate-950 p-2 rounded">მაგ: აცეტატური ბუფერი (CH₃COOH + CH₃COONa)</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-cyan-400 font-bold mb-1 flex items-center space-x-2">
+                                <i class="fa-solid fa-vials"></i> <span>ვარიანტი 2</span>
+                            </div>
+                            <p class="text-xs text-slate-300">სუსტი ფუძე და მისი შესაბამისი მარილის ნარევი.</p>
+                            <div class="mt-2 text-xs font-mono text-indigo-300 bg-slate-950 p-2 rounded">მაგ: ამიაკური ბუფერი (NH₄OH + NH₄Cl)</div>
+                        </div>
+                    </div>
+
+                    <div class="p-5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 space-y-3">
+                        <h3 class="font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-heart-pulse text-red-400"></i>
+                            <span>ადამიანის სისხლის ბუფერული სისტემა</span>
+                        </h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            ადამიანის ორგანიზმში სისხლის pH მერყეობს მკაცრად <b>7.35–7.45</b> დიაპაზონში. მისი ცვლილება 6.8-ის ქვემოთ ან 8.0-ის ზემოთ იწვევს უჯრედთა ფუნქციონირების მოშლას (ლეტალური შედეგით). სისხლის ბუფერული სისტემა ანეიტრალებს უჯრედული სუნთქვის შედეგად წარმოქმნილ ნახშირორჟანგსა და მჟავებს.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Side Fact / Examples Card -->
+                <div class="glass-card rounded-2xl p-6 shadow-2xl flex flex-col justify-between space-y-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center space-x-2 mb-3">
+                            <i class="fa-solid fa-lightbulb text-amber-400"></i>
+                            <span>სად გამოიყენება?</span>
+                        </h3>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-cyan-400 mt-1"></i>
+                                <span><b>ბიოლოგიურ სისტემებში:</b> უჯრედებისა და სისხლის pH-ის მუდმივობის შესანარჩუნებლად.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-cyan-400 mt-1"></i>
+                                <span><b>ანალიტიკურ ქიმიაში:</b> რეაქციების ჩასატარებლად ზუსტი pH-ის დასაცავად.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-cyan-400 mt-1"></i>
+                                <span><b>ფარმაცევტიკასა და მედიცინაში:</b> მედიკამენტებისა და ინტრავენური ხსნარების დასამზადებლად.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-400 space-y-2">
+                        <div class="font-bold text-white">მთავარი კითხვა:</div>
+                        <p>რატომ არ იცვლება ბუფერული ხსნარის pH ძლიერი მჟავის მცირე რაოდენობით დამატებისას?</p>
+                        <div class="text-cyan-300 font-semibold">პასუხი: ბუფერის კომპონენტები აკავშირებენ და ანეიტრალებენ დამატებულ წყალბად-იონებს!</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: QUIZ & EXERCISES -->
+        <section id="tab-quiz" class="tab-content hidden flex-1 flex flex-col space-y-6">
+            <div class="glass-card rounded-2xl p-6 shadow-2xl max-w-3xl mx-auto w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-circle-question text-cyan-400"></i>
+                        <span>კითხვები და დავალებები</span>
+                    </h2>
+                    <span id="quiz-progress" class="text-xs font-mono bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800 text-cyan-300">კითხვა 1 / 2</span>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Simulation state variables
+        let waterPh = 7.0;
+        let bufferPh = 4.75;
+        let waterAcidSteps = 0;
+        let waterBaseSteps = 0;
+        let bufferAcidSteps = 0;
+        let bufferBaseSteps = 0;
+
+        // Switch Tabs
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+                btn.classList.add('text-slate-300', 'hover:bg-slate-800');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
+            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+
+            if(tabId === 'quiz') renderQuiz();
+        }
+
+        // Add Reagent logic
+        function addReagent(target, type) {
+            const logBox = document.getElementById('experiment-log');
+            
+            if(target === 'water') {
+                if(type === 'acid') {
+                    waterAcidSteps++;
+                    waterPh = Math.max(1.0, +(waterPh - 2.5).toFixed(1));
+                    logBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-400 mr-2"></i> <b>სუფთა წყალი:</b> დაემატა ძლიერი მჟავა (HCl). წყლის pH მკვეთრად დაეცა და გახდა <b>${waterPh}</b>! (წყალს არ აქვს ბუფერული თვისება).`;
+                } else {
+                    waterBaseSteps++;
+                    waterPh = Math.min(13.0, +(waterPh + 2.5).toFixed(1));
+                    logBox.innerHTML = `<i class="fa-solid fa-circle-dot text-purple-400 mr-2"></i> <b>სუფთა წყალი:</b> დაემატა ძლიერი ტუტე (NaOH). წყლის pH მკვეთრად ავიდა და გახდა <b>${waterPh}</b>!`;
+                }
+                
+                document.getElementById('water-ph-disp').innerText = waterPh.toFixed(1);
+                const wBadge = document.getElementById('water-badge');
+                if(waterPh < 7) {
+                    wBadge.className = "px-3 py-1 rounded-lg text-xs font-bold bg-red-500/20 text-red-300 border border-red-500/30";
+                    wBadge.innerText = "მჟავე არე";
+                } else if(waterPh > 7) {
+                    wBadge.className = "px-3 py-1 rounded-lg text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30";
+                    wBadge.innerText = "ტუტე არე";
+                } else {
+                    wBadge.className = "px-3 py-1 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+                    wBadge.innerText = "ნეტრალური";
+                }
+
+            } else {
+                if(type === 'acid') {
+                    bufferAcidSteps++;
+                    bufferPh = Math.max(4.2, +(bufferPh - 0.08).toFixed(2));
+                    logBox.innerHTML = `<i class="fa-solid fa-shield-halved text-indigo-400 mr-2"></i> <b>აცეტატური ბუფერი:</b> დაემატა ძლიერი მჟავა (HCl). აცეტატ-იონებმა შთანთქეს H⁺ იონები, ამიტომ pH თითქმის არ შეცვლილა და არის <b>${bufferPh}</b>!`;
+                } else {
+                    bufferBaseSteps++;
+                    bufferPh = Math.min(5.3, +(bufferPh + 0.08).toFixed(2));
+                    logBox.innerHTML = `<i class="fa-solid fa-shield-halved text-indigo-400 mr-2"></i> <b>აცეტატური ბუფერი:</b> დაემატა ძლიერი ტუტე (NaOH). ძმარმჟავამ გაანეტრალა OH⁻ იონები, pH თითქმის უცვლელია: <b>${bufferPh}</b>!`;
+                }
+
+                document.getElementById('buffer-ph-disp').innerText = bufferPh.toFixed(2);
+                const bBadge = document.getElementById('buffer-badge');
+                bBadge.className = "px-3 py-1 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
+                bBadge.innerText = "ინარჩუნებს pH-ს (~4.75)";
+            }
+        }
+
+        function resetExperiment() {
+            waterPh = 7.0;
+            bufferPh = 4.75;
+            waterAcidSteps = 0;
+            waterBaseSteps = 0;
+            bufferAcidSteps = 0;
+            bufferBaseSteps = 0;
+
+            document.getElementById('water-ph-disp').innerText = "7.0";
+            document.getElementById('buffer-ph-disp').innerText = "4.75";
+
+            const wBadge = document.getElementById('water-badge');
+            wBadge.className = "px-3 py-1 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+            wBadge.innerText = "ნეტრალური";
+
+            const bBadge = document.getElementById('buffer-badge');
+            bBadge.className = "px-3 py-1 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
+            bBadge.innerText = "მჟავე ბუფერი";
+
+            document.getElementById('experiment-log').innerHTML = `<i class="fa-solid fa-rotate-right text-cyan-400 mr-2"></i> <b>ექსპერიმენტი განულდა.</b> სუფთა წყალი და ბუფერი საწყის მდგომარეობაშია.`;
+        }
+
+        // Quiz Data
+        const quizData = [
+            {
+                question: "1. ჩამოთვლილთაგან რომელ ნივთიერებათა ნარევი წარმოადგენს ბუფერულ ხსნარს?",
+                options: [
+                    "ა) HCl (ძლიერი მჟავა) და NaCl",
+                    "ბ) HF (სუსტი მჟავა) და KF (მისი შესაბამისი მარილი)",
+                    "გ) NaOH და KOH",
+                    "დ) სუფთა წყალი და სარეცხი საშუალება"
+                ],
+                correct: 1,
+                explanation: "სწორი პასუხია (ბ). ბუფერული სისტემა შედგება სუსტი მჟავისა და მისი შესაბამისი მარილისგან (ან სუსტი ფუძისა და მისი მარილისგან)."
+            },
+            {
+                question: "2. რა როლს ასრულებს სუსტი მჟავა და მისი მარილი ბუფერულ სისტემაში?",
+                options: [
+                    "ა) ზრდის წყლის ტემპერატურას",
+                    "ბ) აკავშირებს და ანეიტრალებს დამატებულ ძლიერ მჟავას ან ტუტეს, რათა pH არ შეიცვალოს",
+                    "გ) ფერს უცვლის ხსნარს ყვითლად",
+                    "დ) სრულად ანგრევს წყალბადის ბმებს"
+                ],
+                correct: 1,
+                explanation: "სწორი პასუხია (ბ). ბუფერის კომპონენტები (მჟავა და მარილი) ერთობლივად ანეიტრალებენ გარედან დამატებულ მჟავას ან ტუტეს."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            if(currentQuizIndex >= quizData.length) {
+                container.innerHTML = `
+                    <div class="text-center py-8 space-y-4">
+                        <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-3xl mx-auto font-bold">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">შესანიშნავია! დავალება დასრულებულია.</h3>
+                        <p class="text-slate-300">თქვენი შედეგი: <span class="text-cyan-400 font-bold text-xl">${score} / ${quizData.length}</span> სწორი პასუხი.</p>
+                        <button onclick="resetQuiz()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg transition-all">
+                            თავიდან დაწყება
+                        </button>
+                    </div>
+                `;
+                document.getElementById('quiz-progress').innerText = `დასრულებულია`;
+                return;
+            }
+
+            const q = quizData[currentQuizIndex];
+            document.getElementById('quiz-progress').innerText = `კითხვა ${currentQuizIndex + 1} / ${quizData.length}`;
+
+            let optionsHtml = '';
+            q.options.forEach((opt, idx) => {
+                optionsHtml += `
+                    <button onclick="checkAnswer(${idx})" class="w-full text-left p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500 hover:bg-slate-900 text-slate-200 transition-all font-medium flex items-center space-x-3">
+                        <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-indigo-400 font-bold text-xs shrink-0">${String.fromCharCode(65 + idx)}</span>
+                        <span>${opt}</span>
+                    </button>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h3 class="text-base font-bold text-white leading-relaxed">${q.question}</h3>
+                    <div class="space-y-3 pt-2">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkAnswer(selectedIdx) {
+            const q = quizData[currentQuizIndex];
+            const container = document.getElementById('quiz-container');
+            
+            let isCorrect = (selectedIdx === q.correct);
+            if(isCorrect) score++;
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h3 class="text-base font-bold text-white">${q.question}</h3>
+                    <div class="p-4 rounded-xl ${isCorrect ? 'bg-emerald-950/40 border border-emerald-500/40 text-emerald-200' : 'bg-red-950/40 border border-red-500/40 text-red-200'} text-sm space-y-2">
+                        <div class="font-bold flex items-center space-x-2">
+                            <i class="fa-solid ${isCorrect ? 'fa-circle-check text-emerald-400' : 'fa-circle-xmark text-red-400'}"></i>
+                            <span>${isCorrect ? 'სწორია!' : 'არასწორია!'}</span>
+                        </div>
+                        <p>${q.explanation}</p>
+                    </div>
+                    <button onclick="nextQuizQuestion()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg transition-all">
+                        შემდეგი კითხვა <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            renderQuiz();
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            renderQuiz();
+        }
+
+        window.onload = function() {
+            // Initialization
+        }
+    </script>
+</body>
+</html>
