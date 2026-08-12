@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ka" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>მარილების ჰიდროლიზი - ინტერაქტიული ლაბორატორია</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        @keyframes bubble {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-90px) scale(1.2); opacity: 0; }
+        }
+        .bubble-anim {
+            animation: bubble 2s infinite ease-in;
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-950 text-slate-100 font-sans antialiased flex flex-col overflow-x-hidden">
+
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-4 lg:px-8 py-3 flex items-center justify-between shadow-2xl">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+                <i class="fa-solid fa-flask-vial text-slate-950 font-bold text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-white tracking-wide">მარილების ჰიდროლიზი</h1>
+                <p class="text-xs text-slate-400">ელექტროლიტური დისოციაცია და ხსნარები</p>
+            </div>
+        </div>
+        <nav class="flex items-center space-x-2 sm:space-x-4">
+            <button onclick="switchTab('sim')" id="btn-sim" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-medium transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center space-x-2">
+                <i class="fa-solid fa-atom"></i> <span class="hidden sm:inline">ვირტუალური ლაბორატორია</span>
+            </button>
+            <button onclick="switchTab('theory')" id="btn-theory" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800 flex items-center space-x-2">
+                <i class="fa-solid fa-book-open"></i> <span class="hidden sm:inline">თეორია & 4 ტიპი</span>
+            </button>
+            <button onclick="switchTab('table')" id="btn-table" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-800 flex items-center space-x-2">
+                <i class="fa-solid fa-table-cells"></i> <span class="hidden sm:inline">ცხრილი & ამოცანები</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+
+        <!-- SECTION 1: VIRTUAL LAB SIMULATION -->
+        <section id="tab-sim" class="tab-content flex-1 flex flex-col space-y-6">
+            <div class="glass-card rounded-2xl p-6 shadow-2xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-vials text-cyan-400"></i>
+                            <span>მარილის დამატება წყალში და ჰიდროლიზის პროცესი</span>
+                        </h2>
+                        <p class="text-sm text-slate-400 mt-1">აირჩიეთ მარილი და დააკვირდით იონურ ტოლობებს, გარემოს არეს (pH) და ვიზუალურ ცვლილებებს!</p>
+                    </div>
+                </div>
+
+                <!-- Salt Selector Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                    <button onclick="selectSalt('Na2CO3')" id="salt-btn-Na2CO3" class="salt-btn p-3.5 rounded-xl border border-indigo-500 bg-indigo-600/20 text-indigo-200 text-sm font-semibold transition-all text-left flex flex-col justify-between shadow-md">
+                        <div class="text-xs text-indigo-400 font-mono">1. ძლიერი ფუძე + სუსტი მჟავა</div>
+                        <div class="text-base font-bold mt-1">Na₂CO₃ (ნატრიუმის კარბონატი)</div>
+                    </button>
+                    <button onclick="selectSalt('Fe2SO43')" id="salt-btn-Fe2SO43" class="salt-btn p-3.5 rounded-xl border border-slate-800 bg-slate-900/80 text-slate-300 text-sm font-semibold transition-all text-left flex flex-col justify-between hover:border-slate-700">
+                        <div class="text-xs text-slate-400 font-mono">2. სუსტი ფუძე + ძლიერი მჟავა</div>
+                        <div class="text-base font-bold mt-1">Fe₂(SO₄)₃ (რკინის(III) სულფატი)</div>
+                    </button>
+                    <button onclick="selectSalt('Al2S3')" id="salt-btn-Al2S3" class="salt-btn p-3.5 rounded-xl border border-slate-800 bg-slate-900/80 text-slate-300 text-sm font-semibold transition-all text-left flex flex-col justify-between hover:border-slate-700">
+                        <div class="text-xs text-slate-400 font-mono">3. სუსტი ფუძე + სუსტი მჟავა</div>
+                        <div class="text-base font-bold mt-1">Al₂S₃ (ალუმინის სულფიდი)</div>
+                    </button>
+                    <button onclick="selectSalt('Na2SO4')" id="salt-btn-Na2SO4" class="salt-btn p-3.5 rounded-xl border border-slate-800 bg-slate-900/80 text-slate-300 text-sm font-semibold transition-all text-left flex flex-col justify-between hover:border-slate-700">
+                        <div class="text-xs text-slate-400 font-mono">4. ძლიერი ფუძე + ძლიერი მჟავა</div>
+                        <div class="text-base font-bold mt-1">Na₂SO₄ (ნატრიუმის სულფატი)</div>
+                    </button>
+                </div>
+
+                <!-- Simulation Visual Workspace -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Beaker Graphic -->
+                    <div class="glass-card rounded-2xl p-6 flex flex-col items-center justify-between border border-slate-800 shadow-inner relative overflow-hidden">
+                        <div class="w-full flex justify-between items-center mb-4">
+                            <span class="text-xs uppercase font-mono tracking-wider text-slate-400">ლაბორატორიული ჭურჭელი</span>
+                            <div id="sim-ph-badge" class="px-3 py-1 rounded-lg text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                ტუტე არე (pH > 7)
+                            </div>
+                        </div>
+
+                        <!-- Beaker Container -->
+                        <div class="relative h-56 w-40 bg-slate-950/60 rounded-b-3xl border-x-2 border-b-2 border-slate-700 flex items-end justify-center overflow-hidden mb-4 shadow-2xl">
+                            <!-- Liquid inside beaker -->
+                            <div id="sim-liquid" class="w-full h-40 transition-all duration-500 bg-purple-600/30 border-t-2 border-purple-400/50 flex flex-col items-center justify-end p-3 relative">
+                                <div id="bubble-container" class="absolute bottom-2 inset-x-0 flex justify-around">
+                                    <div class="w-2 h-2 rounded-full bg-white/40 bubble-anim"></div>
+                                    <div class="w-1.5 h-1.5 rounded-full bg-white/40 bubble-anim" style="animation-delay: 0.5s"></div>
+                                </div>
+                                <div id="sim-liquid-text" class="text-xs text-purple-200 font-mono text-center font-bold z-10 bg-slate-950/80 px-2 py-1 rounded-lg">OH⁻ იონების ჭარბი</div>
+                            </div>
+                        </div>
+
+                        <button onclick="runDissolution()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-play"></i> <span>მარილის გახსნა წყალში</span>
+                        </button>
+                    </div>
+
+                    <!-- Equations & Detailed Process -->
+                    <div class="lg:col-span-2 glass-card rounded-2xl p-6 flex flex-col justify-between space-y-4 border border-slate-800 shadow-inner">
+                        <div>
+                            <h3 id="sim-title" class="text-lg font-bold text-white flex items-center space-x-2 mb-3">
+                                <i class="fa-solid fa-square-root-variable text-cyan-400"></i>
+                                <span>ნატრიუმის კარბონატის ჰიდროლიზი (Na₂CO₃)</span>
+                            </h3>
+
+                            <div class="space-y-4 text-sm">
+                                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+                                    <div class="text-xs uppercase font-mono text-slate-400 mb-1">სრული იონური ტოლობა:</div>
+                                    <div id="sim-eq-full" class="font-mono text-indigo-300 text-sm overflow-x-auto py-1">
+                                        2Na⁺ + CO₃²⁻ + HOH ⇄ 2Na⁺ + HCO₃⁻ + OH⁻
+                                    </div>
+                                </div>
+
+                                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+                                    <div class="text-xs uppercase font-mono text-slate-400 mb-1">შემოკლებული იონური ტოლობა:</div>
+                                    <div id="sim-eq-short" class="font-mono text-cyan-300 text-sm overflow-x-auto py-1">
+                                        CO₃²⁻ + HOH ⇄ HCO₃⁻ + OH⁻
+                                    </div>
+                                </div>
+
+                                <div id="sim-desc" class="p-4 rounded-xl bg-indigo-950/30 border border-indigo-500/30 text-slate-300 text-xs leading-relaxed">
+                                    სუსტი მჟავას ანიონი (კარბონატ-იონი) ურთიერთქმედებს წყლის მოლეკულებთან, ართმევს წყალბად-იონს და წარმოქმნის ჰიდროქსიდ-იონებს (OH⁻). შედეგად ხსნარს აქვს ტუტე არე.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center space-x-3 text-xs text-slate-400">
+                            <i class="fa-solid fa-lightbulb text-amber-400 text-base shrink-0"></i>
+                            <span id="sim-fact"><b>საინტერესო ფაქტი:</b> მინერალური წყლების უმრავლესობა შეიცავს ჰიდროკარბონატ-იონებს (HCO₃⁻), რის გამოც მათ სუსტი ტუტე არე აქვთ (გამოიყენება კუჭის ჭარბი მჟავიანობის გასანეტრალებლად).</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THEORY & 4 TYPES OF HYDROLYSIS -->
+        <section id="tab-theory" class="tab-content hidden flex-1 flex flex-col space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Main Theory Card -->
+                <div class="lg:col-span-2 glass-card rounded-2xl p-6 shadow-2xl space-y-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center space-x-2 mb-2">
+                            <i class="fa-solid fa-book-bookmark text-cyan-400"></i>
+                            <span>რა არის მარილების ჰიდროლიზი?</span>
+                        </h2>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            ნივთიერების დაშლას, წყლის საშუალებით, <b>ჰიდროლიზი</b> ეწოდება („ჰიდრო“ — წყალს ნიშნავს, „ლიოზი“ — დაშლას). ჰიდროლიზდება როგორც არაორგანული, ისე ორგანული ნივთიერებები. ჰიდროლიზის შედეგად ხსნარს შეიძლება ჰქონდეს ტუტე, მჟავა ან ნეტრალური რეაქცია.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-cyan-400 font-bold mb-1 text-sm flex items-center space-x-2">
+                                <i class="fa-solid fa-1"></i> <span>ძლიერი ფუძე + სუსტი მჟავა</span>
+                            </div>
+                            <p class="text-xs text-slate-300">ჰიდროლიზდება ანიონით. ხსნარში გროვდება OH⁻ იონები. <b>არე: ტუტე (pH > 7)</b>.</p>
+                            <div class="mt-2 text-xs font-mono text-indigo-300 bg-slate-950 p-2 rounded">მაგ: Na₂CO₃</div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-cyan-400 font-bold mb-1 text-sm flex items-center space-x-2">
+                                <i class="fa-solid fa-2"></i> <span>სუსტი ფუძე + ძლიერი მჟავა</span>
+                            </div>
+                            <p class="text-xs text-slate-300">ჰიდროლიზდება კატიონით. ხსნარში გროვდება H⁺ იონები. <b>არე: მჟავე (pH < 7)</b>. ლაბორატორიაში დიდად არ ინახება.</p>
+                            <div class="mt-2 text-xs font-mono text-indigo-300 bg-slate-950 p-2 rounded">მაგ: Fe₂(SO₄)₃</div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-cyan-400 font-bold mb-1 text-sm flex items-center space-x-2">
+                                <i class="fa-solid fa-3"></i> <span>სუსტი ფუძე + სუსტი მჟავა</span>
+                            </div>
+                            <p class="text-xs text-slate-300">ჰიდროლიზი მიმდინარეობს სრულად და ინტენსიურად (ნალექისა და აირის ერთდროული გამოყოფით).</p>
+                            <div class="mt-2 text-xs font-mono text-indigo-300 bg-slate-950 p-2 rounded">მაგ: Al₂S₃ + 6HOH → 2Al(OH)₃↓ + 3H₂S↑</div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-cyan-400 font-bold mb-1 text-sm flex items-center space-x-2">
+                                <i class="fa-solid fa-4"></i> <span>ძლიერი ფუძე + ძლიერი მჟავა</span>
+                            </div>
+                            <p class="text-xs text-slate-300"><b>არ ჰიდროლიზდება!</b> არც კატიონი და არც ანიონი არ ურთიერთქმედებს წყალთან. <b>არე: ნეტრალური (pH = 7)</b>.</p>
+                            <div class="mt-2 text-xs font-mono text-indigo-300 bg-slate-950 p-2 rounded">მაგ: Na₂SO₄</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side Fact / Info Card -->
+                <div class="glass-card rounded-2xl p-6 shadow-2xl flex flex-col justify-between space-y-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center space-x-2 mb-3">
+                            <i class="fa-solid fa-shield-halved text-amber-400"></i>
+                            <span>მთავარი პრინციპები</span>
+                        </h3>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-cyan-400 mt-1"></i>
+                                <span><b>წესი:</b> მარილი იშლება სუსტი კომპონენტის მხრივ (სუსტი კატიონი ან სუსტი ანიონი უკავშირდება წყალს).</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-cyan-400 mt-1"></i>
+                                <span><b>რკინის(III) სულფატის ჰიდროლიზი:</b> იწვევს წყალბად-იონების დაგროვებას და სიმძრივეს, ამიტომ ასეთი ხსნარი მალე ფუჭდება.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-cyan-400 mt-1"></i>
+                                <span><b>ალუმინის სულფიდი:</b> წყალში გახსნისთანავე იშლება და გამოიყოფა როგორც ნალექი Al(OH)₃, ისე აირი H₂S.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-400 space-y-2">
+                        <div class="font-bold text-white">გახსოვდეთ:</div>
+                        <p>ძლიერი მჟავისა და ძლიერი ფუძის მარილები (როგორიცაა Na₂SO₄ ან NaNO₃) წყალში ჰიდროლიზს არ განიცდიან.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: TABLE & EXERCISES -->
+        <section id="tab-table" class="tab-content hidden flex-1 flex flex-col space-y-6">
+            <div class="glass-card rounded-2xl p-6 shadow-2xl space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center space-x-2 mb-2">
+                        <i class="fa-solid fa-table text-cyan-400"></i>
+                        <span>ინტერაქტიული სავარჯიშო: მარილების ჰიდროლიზი და pH</span>
+                    </h2>
+                    <p class="text-sm text-slate-400">შეავსეთ უჯრედები და შეამოწმეთ თქვენი ცოდნა მარილების წყალხსნარების pH-ის შესახებ (pH = 7, pH > 7, pH < 7).</p>
+                </div>
+
+                <!-- Table Container -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-xs uppercase font-mono text-slate-400 bg-slate-900/80">
+                                <th class="p-4 rounded-tl-xl">მარილი</th>
+                                <th class="p-4">კომპონენტების ტიპი</th>
+                                <th class="p-4 rounded-tr-xl">pH-ის მნიშვნელობა (აირჩიეთ)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-sm">
+                            <tr class="bg-slate-900/30 hover:bg-slate-900/60 transition-all">
+                                <td class="p-4 font-mono font-bold text-indigo-300">CH₃COONa <span class="text-xs text-slate-400 font-normal">(ნატრიუმის აცეტატი)</span></td>
+                                <td class="p-4 text-xs text-slate-300">ძლიერი ფუძე + სუსტი მჟავა</td>
+                                <td class="p-4">
+                                    <select onchange="checkTableAnswer(0, this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-xs font-mono focus:outline-none focus:border-cyan-500">
+                                        <option value="">აირჩიეთ pH...</option>
+                                        <option value="pH=7">pH = 7 (ნეტრალური)</option>
+                                        <option value="pH>7">pH > 7 (ტუტე)</option>
+                                        <option value="pH<7">pH < 7 (მჟავე)</option>
+                                    </select>
+                                    <span id="feedback-0" class="ml-2 text-xs font-bold"></span>
+                                </td>
+                            </tr>
+                            <tr class="bg-slate-900/30 hover:bg-slate-900/60 transition-all">
+                                <td class="p-4 font-mono font-bold text-indigo-300">NaNO₃ <span class="text-xs text-slate-400 font-normal">(ნატრიუმის ნიტრატი)</span></td>
+                                <td class="p-4 text-xs text-slate-300">ძლიერი ფუძე + ძლიერი მჟავა</td>
+                                <td class="p-4">
+                                    <select onchange="checkTableAnswer(1, this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-xs font-mono focus:outline-none focus:border-cyan-500">
+                                        <option value="">აირჩიეთ pH...</option>
+                                        <option value="pH=7">pH = 7 (ნეტრალური)</option>
+                                        <option value="pH>7">pH > 7 (ტუტე)</option>
+                                        <option value="pH<7">pH < 7 (მჟავე)</option>
+                                    </select>
+                                    <span id="feedback-1" class="ml-2 text-xs font-bold"></span>
+                                </td>
+                            </tr>
+                            <tr class="bg-slate-900/30 hover:bg-slate-900/60 transition-all">
+                                <td class="p-4 font-mono font-bold text-indigo-300">K₂CO₃ <span class="text-xs text-slate-400 font-normal">(კალიუმის კარბონატი)</span></td>
+                                <td class="p-4 text-xs text-slate-300">ძლიერი ფუძე + სუსტი მჟავა</td>
+                                <td class="p-4">
+                                    <select onchange="checkTableAnswer(2, this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-xs font-mono focus:outline-none focus:border-cyan-500">
+                                        <option value="">აირჩიეთ pH...</option>
+                                        <option value="pH=7">pH = 7 (ნეტრალური)</option>
+                                        <option value="pH>7">pH > 7 (ტუტე)</option>
+                                        <option value="pH<7">pH < 7 (მჟავე)</option>
+                                    </select>
+                                    <span id="feedback-2" class="ml-2 text-xs font-bold"></span>
+                                </td>
+                            </tr>
+                            <tr class="bg-slate-900/30 hover:bg-slate-900/60 transition-all">
+                                <td class="p-4 font-mono font-bold text-indigo-300">NH₄Cl <span class="text-xs text-slate-400 font-normal">(ამონიუმის ქლორიდი)</span></td>
+                                <td class="p-4 text-xs text-slate-300">სუსტი ფუძე + ძლიერი მჟავა</td>
+                                <td class="p-4">
+                                    <select onchange="checkTableAnswer(3, this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-xs font-mono focus:outline-none focus:border-cyan-500">
+                                        <option value="">აირჩიეთ pH...</option>
+                                        <option value="pH=7">pH = 7 (ნეტრალური)</option>
+                                        <option value="pH>7">pH > 7 (ტუტე)</option>
+                                        <option value="pH<7">pH < 7 (მჟავე)</option>
+                                    </select>
+                                    <span id="feedback-3" class="ml-2 text-xs font-bold"></span>
+                                </td>
+                            </tr>
+                            <tr class="bg-slate-900/30 hover:bg-slate-900/60 transition-all">
+                                <td class="p-4 font-mono font-bold text-indigo-300">Al₂(SO₄)₃ <span class="text-xs text-slate-400 font-normal">(ალუმინის სულფატი)</span></td>
+                                <td class="p-4 text-xs text-slate-300">სუსტი ფუძე + ძლიერი მჟავა</td>
+                                <td class="p-4">
+                                    <select onchange="checkTableAnswer(4, this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-xs font-mono focus:outline-none focus:border-cyan-500">
+                                        <option value="">აირჩიეთ pH...</option>
+                                        <option value="pH=7">pH = 7 (ნეტრალური)</option>
+                                        <option value="pH>7">pH > 7 (ტუტე)</option>
+                                        <option value="pH<7">pH < 7 (მჟავე)</option>
+                                    </select>
+                                    <span id="feedback-4" class="ml-2 text-xs font-bold"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Textbook Questions Section -->
+                <div class="mt-8 pt-6 border-t border-slate-800 space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-circle-question text-cyan-400"></i>
+                        <span>კითხვები და დავალებები (სახელმძღვანელოდან)</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+                            <div class="font-bold text-xs text-cyan-400">დავალება 2:</div>
+                            <p class="text-xs text-slate-300">pH-ის რა შესაძლო მნიშვნელობა ექნება ნატრიუმის კარბონატის (Na₂CO₃) წყალხსნარს?</p>
+                            <div class="text-xs font-mono text-emerald-400 bg-slate-900 p-2 rounded">პასუხი: pH > 7 (რადგან ძლიერი ფუძისა და სუსტი მჟავის მარილის ჰიდროლიზისას წარმოიქმნება ტუტე არე).</div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+                            <div class="font-bold text-xs text-cyan-400">დავალება 3:</div>
+                            <p class="text-xs text-slate-300">რკინის(III)-ის სულფატის ჰიდროლიზისას:</p>
+                            <ul class="text-xs text-slate-300 list-disc list-inside space-y-1">
+                                <li>ა) რომელი ნივთიერების წარმოქმნა იწვევს სიმძრივეს? (H⁺ იონების დაგროვება)</li>
+                                <li>ბ) როგორი არე ექნება ხსნარს? (მჟავე, pH < 7)</li>
+                                <li>გ) რომელი ნივთიერების დამატებითაა შესაძლებელი სიმძრივის თავიდან აცილება? (მჟავის დამატებით)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Simulation data for salts
+        const saltsData = {
+            'Na2CO3': {
+                name: 'ნატრიუმის კარბონატი (Na₂CO₃)',
+                type: 'ძლიერი ფუძე + სუსტი მჟავა',
+                eqFull: '2Na⁺ + CO₃²⁻ + HOH ⇄ 2Na⁺ + HCO₃⁻ + OH⁻',
+                eqShort: 'CO₃²⁻ + HOH ⇄ HCO₃⁻ + OH⁻',
+                desc: 'სუსტი მჟავას ანიონი (კარბონატ-იონი) ურთიერთქმედებს წყალთან, ართმევს წყალბად-იონს და წარმოქმნის ჰიდროქსიდ-იონებს (OH⁻). ხსნარის არე ტუტეა.',
+                fact: 'მინერალური წყლების უმრავლესობა შეიცავს ჰიდროკარბონატ-იონებს (HCO₃⁻), რის გამოც მათ სუსტი ტუტე არე აქვთ (გამოიყენება კუჭის ჭარბი მჟავიანობის გასანეტრალებლად).',
+                phText: 'ტუტე არე (pH > 7)',
+                colorClass: 'bg-purple-600/30 border-purple-400/50 text-purple-200',
+                badgeClass: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+                liquidText: 'OH⁻ იონების ჭარბი'
+            },
+            'Fe2SO43': {
+                name: 'რკინის(III) სულფატი (Fe₂(SO₄)₃)',
+                type: 'სუსტი ფუძე + ძლიერი მჟავა',
+                eqFull: '2Fe³⁺ + 3SO₄²⁻ + 6HOH ⇄ 2Fe(OH)₃ + 6H⁺ + 3SO₄²⁻',
+                eqShort: 'Fe³⁺ + 3HOH ⇄ Fe(OH)₃ + 3H⁺',
+                desc: 'სუსტი ფუძის კატიონი (Fe³⁺) უკავშირდება წყალბადის ოქსიდს, ხსნარში გროვდება წყალბად-იონები (H⁺). ხსნარის არე მჟავეა და დროთა განმავლობაში ფუჭდება.',
+                fact: 'როგორც ვხედავთ, ხსნარში გროვდება წყალბად-იონები და შეინიშნება სიმძრივერე, ამიტომ ასეთი ხსნარი ლაბორატორიაში დიდხანს არ ინახება.',
+                phText: 'მჟავე არე (pH < 7)',
+                colorClass: 'bg-red-600/30 border-red-400/50 text-red-200',
+                badgeClass: 'bg-red-500/20 text-red-300 border-red-500/30',
+                liquidText: 'H⁺ იონების ჭარბი'
+            },
+            'Al2S3': {
+                name: 'ალუმინის სულფიდი (Al₂S₃)',
+                type: 'სუსტი ფუძე + სუსტი მჟავა',
+                eqFull: 'Al₂S₃ + 6HOH → 2Al(OH)₃↓ + 3H₂S↑',
+                eqShort: '2Al³⁺ + 3S²⁻ + 6HOH → 2Al(OH)₃↓ + 3H₂S↑',
+                desc: 'ჰიდროლიზი იმდენად ინტენსიურად მიმდინარეობს, რომ იგი ბოლომდე მიდის. ერთდროულად გამოიყოფა ნალექი [Al(OH)₃] და აირი [H₂S].',
+                fact: 'ალუმინის სულფიდის ჰიდროლიზი იმდენად ძლიერია, რომ წყალხსნარში შექმნისთანავე იშლება და ნალექი და აირი ერთდროულად შეინიშნება.',
+                phText: 'ნეტრალური / სრული დაშლა',
+                colorClass: 'bg-amber-600/30 border-amber-400/50 text-amber-200',
+                badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                liquidText: 'Al(OH)₃↓ + H₂S↑'
+            },
+            'Na2SO4': {
+                name: 'ნატრიუმის სულფატი (Na₂SO₄)',
+                type: 'ძლიერი ფუძე + ძლიერი მჟავა',
+                eqFull: 'Na₂SO₄ → 2Na⁺ + SO₄²⁻ (ჰიდროლიზი არ ხდება)',
+                eqShort: 'არ ურთიერთქმედებს წყალთან',
+                desc: 'არც კატიონი და არც ანიონი არ ჰიდროლიზდება. H⁺ და OH⁻ იონების კონცენტრაციები არ იცვლება.',
+                fact: 'ნატრიუმის სულფატის დისოციაციით მიღებული არც კატიონი და არც ანიონი წყლის იონებთან არ ურთიერთქმედებს, ამიტომ pH მუდმივია.',
+                phText: 'ნეტრალური არე (pH = 7)',
+                colorClass: 'bg-emerald-600/30 border-emerald-400/50 text-emerald-200',
+                badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                liquidText: 'H⁺ = OH⁻ (ნეტრალური)'
+            }
+        };
+
+        // Switch Tabs function
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+                btn.classList.add('text-slate-300', 'hover:bg-slate-800');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
+            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+        }
+
+        // Select salt in simulation
+        function selectSalt(saltKey) {
+            // Update button styles
+            document.querySelectorAll('.salt-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-500', 'bg-indigo-600/20', 'text-indigo-200');
+                btn.classList.add('border-slate-800', 'bg-slate-900/80', 'text-slate-300');
+            });
+            const selBtn = document.getElementById(`salt-btn-${saltKey}`);
+            selBtn.classList.remove('border-slate-800', 'bg-slate-900/80', 'text-slate-300');
+            selBtn.classList.add('border-indigo-500', 'bg-indigo-600/20', 'text-indigo-200');
+
+            const data = saltsData[saltKey];
+            document.getElementById('sim-title').innerHTML = `<i class="fa-solid fa-square-root-variable text-cyan-400"></i> <span>${data.name} ჰიდროლიზი</span>`;
+            document.getElementById('sim-eq-full').innerText = data.eqFull;
+            document.getElementById('sim-eq-short').innerText = data.eqShort;
+            document.getElementById('sim-desc').innerText = data.desc;
+            document.getElementById('sim-fact').innerHTML = `<b>საინტერესო ფაქტი:</b> ${data.fact}`;
+
+            const badge = document.getElementById('sim-ph-badge');
+            badge.className = `px-3 py-1 rounded-lg text-xs font-bold border ${data.badgeClass}`;
+            badge.innerText = data.phText;
+
+            const liquid = document.getElementById('sim-liquid');
+            liquid.className = `w-full h-40 transition-all duration-500 border-t-2 flex flex-col items-center justify-end p-3 relative ${data.colorClass}`;
+            document.getElementById('sim-liquid-text').innerText = data.liquidText;
+        }
+
+        function runDissolution() {
+            const liquid = document.getElementById('sim-liquid');
+            liquid.style.transform = 'scale(1.03)';
+            setTimeout(() => {
+                liquid.style.transform = 'scale(1)';
+            }, 300);
+        }
+
+        // Table answers checking
+        const correctAnswers = {
+            0: 'pH>7',
+            1: 'pH=7',
+            2: 'pH>7',
+            3: 'pH<7',
+            4: 'pH<7'
+        };
+
+        function checkTableAnswer(rowIdx, val) {
+            const fb = document.getElementById(`feedback-${rowIdx}`);
+            if(!val) {
+                fb.innerText = '';
+                return;
+            }
+            if(val === correctAnswers[rowIdx]) {
+                fb.className = "ml-2 text-xs font-bold text-emerald-400";
+                fb.innerHTML = '<i class="fa-solid fa-circle-check"></i> სწორია!';
+            } else {
+                fb.className = "ml-2 text-xs font-bold text-red-400";
+                fb.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> არასწორია';
+            }
+        }
+
+        window.onload = function() {
+            selectSalt('Na2CO3');
+        }
+    </script>
+</body>
+</html>
