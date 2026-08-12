@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ka" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>გალვანური ელემენტი - ინტერაქციული ლაბორატორია</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.2);
+        }
+        .electron {
+            animation: moveElectron 1.8s linear infinite;
+        }
+        @keyframes moveElectron {
+            0% { transform: translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateX(200px); opacity: 0; }
+        }
+        .ion-particle {
+            animation: moveIon 3s ease-in-out infinite;
+        }
+        @keyframes moveIon {
+            0% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(-15px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0.3; }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-full flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-bolt-lightning text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">გალვანური ელემენტი Pro</h1>
+                    <p class="text-xs text-slate-400">ელექტროქიმიური ძალების ლაბორატორია</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-1">
+                <button onclick="switchTab('theory')" id="nav-theory" class="px-4 py-2 rounded-lg text-sm font-medium transition bg-indigo-600 text-white shadow-md">თეორია & პრინციპი</button>
+                <button onclick="switchTab('simulation')" id="nav-simulation" class="px-4 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:text-white hover:bg-slate-800">ინტერაქციული ლაბორატორია</button>
+                <button onclick="switchTab('builder')" id="nav-builder" class="px-4 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:text-white hover:bg-slate-800">ელემენტების კონსტრუქტორი</button>
+                <button onclick="switchTab('quiz')" id="nav-quiz" class="px-4 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:text-white hover:bg-slate-800">ქვიზი & გამოწვევა</button>
+            </nav>
+            <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    <span class="w-2 h-2 mr-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+                    გაკვეთილის რეჟიმი
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <div class="md:hidden flex justify-around bg-slate-800/90 border-b border-slate-700 p-2 text-xs">
+        <button onclick="switchTab('theory')" id="mob-nav-theory" class="py-1 px-2 rounded font-medium bg-indigo-600 text-white">თეორია</button>
+        <button onclick="switchTab('simulation')" id="mob-nav-simulation" class="py-1 px-2 rounded font-medium text-slate-300">ლაბორატორია</button>
+        <button onclick="switchTab('builder')" id="mob-nav-builder" class="py-1 px-2 rounded font-medium text-slate-300">კონსტრუქტორი</button>
+        <button onclick="switchTab('quiz')" id="mob-nav-quiz" class="py-1 px-2 rounded font-medium text-slate-300">ქვიზი</button>
+    </div>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- THEORY SECTION -->
+        <section id="sec-theory" class="space-y-8">
+            <div class="bg-gradient-to-r from-indigo-900/50 via-slate-800/50 to-violet-900/50 border border-indigo-500/20 rounded-2xl p-8 glow-effect">
+                <div class="max-w-3xl">
+                    <span class="text-indigo-400 font-semibold text-sm uppercase tracking-wider">მთავარი თემა</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-4 text-white">როგორ მუშაობს გალვანური ელემენტი?</h2>
+                    <p class="text-slate-300 text-lg leading-relaxed">
+                        გალვანური ელემენტი არის ქიმიური ენერგიის ელექტრულ ენერგიად გარდაქმნის სპონტანური წყარო. იგი დაფუძნებულია ჟანგვა-აღდგენით პროცესებზე, სადაც ელექტრონები მავთულის მეშვეობით გადადიან ანოდიდან კათოდზე.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-6 backdrop-blur">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold text-xl mb-4 border border-amber-500/20">
+                        <i class="fa-solid fa-minus"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-amber-400 mb-2">ანოდი (-)</h3>
+                    <p class="text-slate-300 text-sm mb-4">
+                        ელექტროდი, რომელზეც მიმდინარეობს <span class="text-amber-400 font-semibold">ჟანგვის პროცესი</span> (ელექტრონების გაცემა). მეტალი იხსნება ხსნარში და კარგავს მასას.
+                    </p>
+                    <div class="bg-slate-900 rounded-xl p-3 font-mono text-xs text-amber-300 border border-slate-700">
+                        Zn⁰ ➔ Zn²⁺ + 2e⁻
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-6 backdrop-blur">
+                    <div class="w-12 h-12 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center font-bold text-xl mb-4 border border-violet-500/20">
+                        <i class="fa-solid fa-bridge"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-violet-400 mb-2">მარილიანი ხიდი</h3>
+                    <p class="text-slate-300 text-sm mb-4">
+                        უზრუნველყოფს ელექტრულ ნეიტრალურობას ხსნარებს შორის. ანიონები და კატიონები მოძრაობენ ჭურჭლებს შორის და აბალანსებენ მუხტებს.
+                    </p>
+                    <div class="bg-slate-900 rounded-xl p-3 font-mono text-xs text-violet-300 border border-slate-700">
+                        K⁺ და Cl⁻ იონების დიფუზია
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-6 backdrop-blur">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-xl mb-4 border border-blue-500/20">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">კათოდი (+)</h3>
+                    <p class="text-slate-300 text-sm mb-4">
+                        ელექტროდი, რომელზეც მიმდინარეობს <span class="text-blue-400 font-semibold">აღდგენის პროცესი</span> (ელექტრონების მიერთება). ხსნარიდან მეტალიილექტრდება და ილექტრება.
+                    </p>
+                    <div class="bg-slate-900 rounded-xl p-3 font-mono text-xs text-blue-300 border border-slate-700">
+                        Cu²⁺ + 2e⁻ ➔ Cu⁰
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 flex items-center justify-between">
+                <div>
+                    <h4 class="text-lg font-bold text-white">მზად ხართ ექსპერიმენტისთვის?</h4>
+                    <p class="text-slate-400 text-sm mt-1">ჩაერთეთ ინტერაქციულ ლაბორატორიაში და აამოქმედეთ დანიელის ელემენტი რეალურ დროში.</p>
+                </div>
+                <button onclick="switchTab('simulation')" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center space-x-2 shrink-0">
+                    <span>ლაბორატორიაში გადასვლა</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SIMULATION SECTION -->
+        <section id="sec-simulation" class="hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-white">დანიელის ელემენტის ინტერაქციული ლაბორატორია</h2>
+                <p class="text-slate-400 text-sm mt-2">დააკვირდით ელექტრონების მოძრაობას, ელექტროდების ცვლილებას და ვოლტმეტრის ჩვენებას.</p>
+            </div>
+
+            <!-- Lab Station Box -->
+            <div class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 md:p-8 backdrop-blur shadow-2xl relative">
+                
+                <!-- Top Controller Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-8 bg-slate-900/80 p-4 rounded-2xl border border-slate-700">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-xs uppercase tracking-wider text-slate-400 font-bold">მართვა:</span>
+                        <button id="sim-toggle-btn" onclick="toggleSimulation()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold shadow-lg shadow-emerald-600/30 transition flex items-center space-x-2">
+                            <i id="sim-icon" class="fa-solid fa-play"></i>
+                            <span id="sim-btn-text">ექსპერიმენტის დაწყება</span>
+                        </button>
+                        <button onclick="resetSimulation()" class="px-4 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-200 text-sm font-semibold transition flex items-center space-x-2">
+                            <i class="fa-solid fa-rotate-right"></i>
+                            <span>გადატვირთვა</span>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-6 text-sm">
+                        <div class="bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
+                            <span class="text-slate-400 text-xs">ელექტრომამოძრავებელი ძალა (EMF):</span>
+                            <span id="volt-display" class="font-mono font-bold text-emerald-400 text-lg ml-2">1.10 V</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graphic Schema -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center py-4">
+                    
+                    <!-- ANODE BEAKER -->
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-5 flex flex-col items-center relative">
+                        <div class="absolute top-2 left-3 bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded text-xs font-semibold">
+                            ანოდი (-) | Zn
+                        </div>
+                        <h4 class="text-amber-400 font-bold mt-4">თუთიის ელექტროდი</h4>
+                        <p class="text-xs text-slate-400 mb-6 text-center">ZnSO₄ (1M) ხსნარი</p>
+                        
+                        <div class="w-40 h-48 bg-slate-800/60 border-2 border-t-0 border-slate-600 rounded-b-2xl relative flex flex-col justify-end p-2 overflow-hidden">
+                            <div class="absolute inset-x-0 bottom-0 h-36 bg-blue-950/70 border-t border-blue-500/30 flex flex-col justify-end items-center pb-3">
+                                <span class="text-[10px] text-blue-300 font-mono">Zn²⁺ იონების მატება</span>
+                            </div>
+                            <div id="sim-zinc-rod" class="w-8 h-32 bg-slate-300 border border-slate-400 rounded-t-sm mx-auto z-10 transition-all duration-300 shadow-md"></div>
+                        </div>
+                        <div class="mt-4 text-center text-xs">
+                            <span class="text-slate-400">ელექტროდის მასა:</span>
+                            <span id="sim-zinc-mass" class="font-mono text-amber-300 font-bold ml-1">100.0 გ</span>
+                        </div>
+                    </div>
+
+                    <!-- CENTRAL BRIDGE & VOLTMETER -->
+                    <div class="flex flex-col items-center justify-center space-y-4">
+                        <div class="bg-slate-950 border-2 border-indigo-500/50 rounded-2xl p-4 w-52 text-center shadow-xl relative">
+                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white text-[10px] px-2.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                                ციფრული ვოლტმეტრი
+                            </div>
+                            <div class="bg-slate-900 rounded-xl p-3 border border-slate-800 mt-1">
+                                <div id="meter-screen" class="font-mono text-2xl font-bold text-emerald-400 tracking-wider">1.10 V</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5">სტაბილური დენი</div>
+                            </div>
+                        </div>
+
+                        <div class="w-full h-8 relative flex items-center justify-center">
+                            <div class="absolute inset-x-4 h-1 bg-slate-600 rounded"></div>
+                            <div id="sim-electrons" class="hidden absolute inset-x-4 flex justify-between items-center px-4">
+                                <div class="w-3 h-3 rounded-full bg-amber-300 shadow animate-ping"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow electron"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow electron" style="animation-delay: 0.9s;"></div>
+                            </div>
+                            <span class="bg-slate-900 px-2 text-[10px] text-slate-400 z-10 font-mono">ელექტრონების დინება</span>
+                        </div>
+
+                        <div class="text-xs text-slate-300 bg-slate-900/90 px-4 py-2 rounded-xl border border-slate-700 text-center w-full">
+                            <i class="fa-solid fa-bridge text-indigo-400 mr-1.5"></i> მარილიანი ხიდი უზრუნველყოფს იონურ გადასვლას
+                        </div>
+                    </div>
+
+                    <!-- CATHODE BEAKER -->
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-5 flex flex-col items-center relative">
+                        <div class="absolute top-2 left-3 bg-blue-500/10 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded text-xs font-semibold">
+                            კათოდი (+) | Cu
+                        </div>
+                        <h4 class="text-blue-400 font-bold mt-4">სპილენძის ელექტროდი</h4>
+                        <p class="text-xs text-slate-400 mb-6 text-center">CuSO₄ (1M) ხსნარი</p>
+                        
+                        <div class="w-40 h-48 bg-slate-800/60 border-2 border-t-0 border-slate-600 rounded-b-2xl relative flex flex-col justify-end p-2 overflow-hidden">
+                            <div class="absolute inset-x-0 bottom-0 h-36 bg-cyan-900/70 border-t border-cyan-500/30 flex flex-col justify-end items-center pb-3">
+                                <span class="text-[10px] text-cyan-300 font-mono">Cu⁰ ნალექის ზრდა</span>
+                            </div>
+                            <div id="sim-copper-rod" class="w-8 h-32 bg-amber-700 border border-amber-600 rounded-t-sm mx-auto z-10 transition-all duration-300 shadow-md"></div>
+                        </div>
+                        <div class="mt-4 text-center text-xs">
+                            <span class="text-slate-400">ელექტროდის მასა:</span>
+                            <span id="sim-copper-mass" class="font-mono text-blue-300 font-bold ml-1">100.0 გ</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Simulation Status Log -->
+                <div class="mt-6 bg-slate-900 rounded-2xl p-4 border border-slate-700 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h5 class="text-xs font-semibold text-indigo-300 uppercase tracking-wider mb-1">ლაბორატორიული ჟურნალი:</h5>
+                        <p id="sim-log-text" class="text-xs text-slate-300">ექსპერიმენტი მზადაა. დააჭირეთ დაწყებას.</p>
+                    </div>
+                    <div class="text-xs font-mono bg-slate-800 px-3 py-2 rounded-xl border border-slate-700">
+                        ხანგრძლივობა: <span id="sim-time" class="text-emerald-400 font-bold">00:00</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- BUILDER SECTION -->
+        <section id="sec-builder" class="hidden space-y-8 max-w-4xl mx-auto">
+            <div class="text-center">
+                <span class="text-indigo-400 font-semibold text-sm uppercase tracking-wider">ინოვაციური ინსტრუმენტი</span>
+                <h2 class="text-3xl font-extrabold text-white mt-1">შექმენი შენი გალვანური ელემენტი</h2>
+                <p class="text-slate-400 text-sm mt-2">შეარჩიეთ სხვადასხვა მეტალები და გამოთვალეთ მოსალოდნელი ვოლტაჟი (EMF)!</p>
+            </div>
+
+            <div class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 sm:p-8 backdrop-blur shadow-2xl space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Anode selection -->
+                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700">
+                        <label class="block text-sm font-bold text-amber-400 mb-2">
+                            <i class="fa-solid fa-minus mr-1.5"></i> აირჩიეთ ანოდი (-) [ჟანგვა]:
+                        </label>
+                        <select id="builder-anode" onchange="calculateEMF()" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                            <option value="-0.76">თუთია (Zn / Zn²⁺) [E⁰ = -0.76V]</option>
+                            <option value="-0.44">რკინა (Fe / Fe²⁺) [E⁰ = -0.44V]</option>
+                            <option value="-2.37">მაგნეზიუმი (Mg / Mg²⁺) [E⁰ = -2.37V]</option>
+                            <option value="-1.66">ალუმინი (Al / Al³⁺) [E⁰ = -1.66V]</option>
+                        </select>
+                    </div>
+
+                    <!-- Cathode selection -->
+                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700">
+                        <label class="block text-sm font-bold text-blue-400 mb-2">
+                            <i class="fa-solid fa-plus mr-1.5"></i> აირჩიეთ კათოდი (+) [აღდგენა]:
+                        </label>
+                        <select id="builder-cathode" onchange="calculateEMF()" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                            <option value="0.34">სპილენძი (Cu / Cu²⁺) [E⁰ = +0.34V]</option>
+                            <option value="0.80">ვერცხლი (Ag / Ag⁺) [E⁰ = +0.80V]</option>
+                            <option value="0.00">წყალბადი (H₂ / H⁺) [E⁰ = 0.00V]</option>
+                            <option value="0.85">ვერცხლისწყალი (Hg / Hg²⁺) [E⁰ = +0.85V]</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Calculation Result Box -->
+                <div class="bg-gradient-to-r from-slate-900 to-indigo-950 p-6 rounded-2xl border border-indigo-500/30 text-center space-y-3">
+                    <span class="text-xs uppercase tracking-wider text-slate-400 font-bold">გამოთვლილი ელემენტის პოტენციალი</span>
+                    <div id="builder-emf-result" class="text-4xl font-mono font-extrabold text-emerald-400">1.10 V</div>
+                    <p id="builder-desc" class="text-xs text-slate-300 max-w-lg mx-auto">
+                        ფორმულა: EMF = E⁰(კათოდი) - E⁰(ანოდი). ეს კომბინაცია იძლევა სპონტანურ და სტაბილურ ელექტრულ დენს.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="sec-quiz" class="hidden space-y-8 max-w-2xl mx-auto">
+            <div class="text-center">
+                <span class="text-indigo-400 font-semibold text-sm uppercase tracking-wider">ცოდნის შემოწმება</span>
+                <h2 class="text-3xl font-extrabold text-white mt-1">ქვიზი: გალვანური ელემენტები</h2>
+                <p class="text-slate-400 text-sm mt-2">უპასუხეთ კითხვებს და შეაფასეთ თქვენი ცოდნა!</p>
+            </div>
+
+            <div class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 sm:p-8 backdrop-blur shadow-xl">
+                <div id="quiz-container">
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
+                        <span id="quiz-progress" class="text-xs font-semibold text-indigo-400 uppercase tracking-wider">კითხვა 1 / 4</span>
+                        <span id="quiz-score" class="text-xs font-mono bg-slate-900 px-3 py-1 rounded-lg text-emerald-400 border border-slate-700">ქულა: 0</span>
+                    </div>
+
+                    <h3 id="quiz-question" class="text-lg font-bold text-white mb-6">
+                        რომელი პროცესი მიმდინარეობს გალვანური ელემენტის ანოდზე?
+                    </h3>
+
+                    <div id="quiz-options" class="space-y-3 mb-8"></div>
+
+                    <div class="flex justify-end">
+                        <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition">
+                            შემდეგი <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="quiz-completed" class="hidden text-center py-8 space-y-4">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 mx-auto flex items-center justify-center text-3xl border border-emerald-500/30">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">ქვიზი წარმატებით დასრულდა!</h3>
+                    <p id="quiz-final-score" class="text-slate-300 text-sm">თქვენ დააგროვეთ მაქსიმალური ქულა.</p>
+                    <button onclick="restartQuiz()" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition">
+                        თავიდან ცდა
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-auto border-t border-slate-800 bg-slate-900/60 py-6 text-center text-xs text-slate-500">
+        <p>ინტერაქციული ქიმიის გაკვეთილი &bull; გალვანური ელემენტის სიმულატორი &bull; ყველა უფლება დაცულია</p>
+    </footer>
+
+    <script>
+        // Tab switching controller
+        function switchTab(tabId) {
+            const tabs = ['theory', 'simulation', 'builder', 'quiz'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`sec-${t}`);
+                const navBtn = document.getElementById(`nav-${t}`);
+                const mobBtn = document.getElementById(`mob-nav-${t}`);
+                
+                if (t === tabId) {
+                    sec.classList.remove('hidden');
+                    if (navBtn) navBtn.className = "px-4 py-2 rounded-lg text-sm font-medium transition bg-indigo-600 text-white shadow-md";
+                    if (mobBtn) mobBtn.className = "py-1 px-2 rounded font-medium bg-indigo-600 text-white";
+                } else {
+                    sec.classList.add('hidden');
+                    if (navBtn) navBtn.className = "px-4 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:text-white hover:bg-slate-800";
+                    if (mobBtn) mobBtn.className = "py-1 px-2 rounded font-medium text-slate-300";
+                }
+            });
+        }
+
+        // Simulation state
+        let isSimRunning = false;
+        let simInterval = null;
+        let simSeconds = 0;
+        let zincMass = 100.0;
+        let copperMass = 100.0;
+
+        function toggleSimulation() {
+            isSimRunning = !isSimRunning;
+            const btn = document.getElementById('sim-toggle-btn');
+            const icon = document.getElementById('sim-icon');
+            const btnText = document.getElementById('sim-btn-text');
+            const electrons = document.getElementById('sim-electrons');
+            const log = document.getElementById('sim-log-text');
+
+            if (isSimRunning) {
+                btn.className = "px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-sm font-semibold shadow-lg shadow-amber-600/30 transition flex items-center space-x-2";
+                icon.className = "fa-solid fa-pause";
+                btnText.textContent = "შეჩერება";
+                electrons.classList.remove('hidden');
+                log.textContent = "ექსპერიმენტი მიმდინარეობს: თუთიის ანოდი იჟანგება, სპილენძი კათოდზე ილექტრება.";
+
+                simInterval = setInterval(() => {
+                    simSeconds++;
+                    let mins = Math.floor(simSeconds / 60).toString().padStart(2, '0');
+                    let secs = (simSeconds % 60).toString().padStart(2, '0');
+                    document.getElementById('sim-time').textContent = `${mins}:${secs}`;
+
+                    // Simulate mass changes
+                    if (zincMass > 95.0) {
+                        zincMass -= 0.1;
+                        copperMass += 0.12;
+                        document.getElementById('sim-zinc-mass').textContent = zincMass.toFixed(1) + ' გ';
+                        document.getElementById('sim-copper-mass').textContent = copperMass.toFixed(1) + ' გ';
+                        
+                        let zRod = document.getElementById('sim-zinc-rod');
+                        let cRod = document.getElementById('sim-copper-rod');
+                        zRod.style.height = (32 * (zincMass / 100)) + 'px';
+                        cRod.style.height = (32 * (1 + (copperMass - 100) / 50)) + 'px';
+                    }
+                }, 1000);
+            } else {
+                btn.className = "px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold shadow-lg shadow-emerald-600/30 transition flex items-center space-x-2";
+                icon.className = "fa-solid fa-play";
+                btnText.textContent = "ექსპერიმენტის გაგრძელება";
+                electrons.classList.add('hidden');
+                log.textContent = "ექსპერიმენტი შეჩერებულია.";
+                clearInterval(simInterval);
+            }
+        }
+
+        function resetSimulation() {
+            isSimRunning = false;
+            clearInterval(simInterval);
+            simSeconds = 0;
+            zincMass = 100.0;
+            copperMass = 100.0;
+            document.getElementById('sim-time').textContent = "00:00";
+            document.getElementById('sim-zinc-mass').textContent = "100.0 გ";
+            document.getElementById('sim-copper-mass').textContent = "100.0 გ";
+            document.getElementById('sim-zinc-rod').style.height = "32px";
+            document.getElementById('sim-copper-rod').style.height = "32px";
+            document.getElementById('sim-electrons').classList.add('hidden');
+            document.getElementById('sim-toggle-btn').className = "px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold shadow-lg shadow-emerald-600/30 transition flex items-center space-x-2";
+            document.getElementById('sim-icon').className = "fa-solid fa-play";
+            document.getElementById('sim-btn-text').textContent = "ექსპერიმენტის დაწყება";
+            document.getElementById('sim-log-text').textContent = "გადატვირთულია. მზადაა ახალი ექსპერიმენტისათვის.";
+        }
+
+        // Builder EMF calculator
+        function calculateEMF() {
+            const anodeVal = parseFloat(document.getElementById('builder-anode').value);
+            const cathodeVal = parseFloat(document.getElementById('builder-cathode').value);
+            const emf = (cathodeVal - anodeVal).toFixed(2);
+            document.getElementById('builder-emf-result').textContent = emf + " V";
+            
+            const desc = document.getElementById('builder-desc');
+            if (emf > 1.0) {
+                desc.textContent = `ძალიან ძლიერი და ეფექტური გალვანური ელემენტია (EMF = ${emf}V). სპონტანური რეაქცია მაღალი სიჩქარით მიმდინარეობს.`;
+            } else {
+                desc.textContent = `სტანდარტული გალვანური ელემენტი (EMF = ${emf}V). შესაფერისია ელექტროქიმიური პოტენციალების შესასწავლად.`;
+            }
+        }
+
+        // Quiz data and logic
+        const quizData = [
+            {
+                question: "რომელი პროცესი მიმდინარეობს გალვანური ელემენტის ანოდზე?",
+                options: ["ჟანგვა (ელექტრონების გაცემა)", "აღდგენა (ელექტრონების მიერთება)", "ნეიტრალიზაცია", "არცერთი ზემოთ ჩამოთვლილთაგან"],
+                correct: 0
+            },
+            {
+                question: "რა ფუნქცია აქვს მარილიან ხიდს გალვანურ ელემენტში?",
+                options: ["ელექტრონების გადატანა ჭურჭლებს შორის", "ხსნარების იონური ბალანსის (ნეიტრალურობის) შენარჩუნება", "ვოლტაჟის გაზრდა", "მეტალების გაწმენდა"],
+                correct: 1
+            },
+            {
+                question: "დანიელის ელემენტში რომელი მეტალი წარმოადგენს კათოდს (+)?",
+                options: ["თუთია (Zn)", "სპილენძი (Cu)", "ალუმინი (Al)", "ნატრიუმი (Na)"],
+                correct: 1
+            },
+            {
+                question: "როგორ გამოითვლება გალვანური ელემენტის ელექტრომამოძრავებელი ძალა (EMF)?",
+                options: ["E(ანოდი) + E(კათოდი)", "E(კათოდი) - E(ანოდი)", "E(ანოდი) × E(კათოდი)", "E(კათოდი) / E(ანოდი)"],
+                correct: 1
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let selectedOption = null;
+
+        function loadQuizQuestion() {
+            const q = quizData[currentQuizIndex];
+            document.getElementById('quiz-progress').textContent = `კითხვა ${currentQuizIndex + 1} / ${quizData.length}`;
+            document.getElementById('quiz-score').textContent = `ქულა: ${quizScore}`;
+            document.getElementById('quiz-question').textContent = q.question;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            selectedOption = null;
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500 text-sm text-slate-200 transition flex items-center justify-between";
+                btn.innerHTML = `<span>${opt}</span><span class="w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center text-xs"></span>`;
+                btn.onclick = () => selectQuizOption(idx, btn, q.correct);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizOption(idx, btnElement, correctIdx) {
+            if (selectedOption !== null) return;
+            selectedOption = idx;
+
+            const buttons = document.getElementById('quiz-options').children;
+            if (idx === correctIdx) {
+                btnElement.className = "w-full text-left p-4 rounded-xl bg-emerald-950/60 border border-emerald-500 text-sm text-emerald-200 transition flex items-center justify-between shadow-lg shadow-emerald-500/10";
+                quizScore += 25;
+                document.getElementById('quiz-score').textContent = `ქულა: ${quizScore}`;
+            } else {
+                btnElement.className = "w-full text-left p-4 rounded-xl bg-rose-950/60 border border-rose-500 text-sm text-rose-200 transition flex items-center justify-between";
+                buttons[correctIdx].className = "w-full text-left p-4 rounded-xl bg-emerald-950/60 border border-emerald-500 text-sm text-emerald-200 transition flex items-center justify-between";
+            }
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < quizData.length) {
+                loadQuizQuestion();
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('quiz-completed').classList.remove('hidden');
+                document.getElementById('quiz-final-score').textContent = `თქვენ დააგროვეთ ${quizScore} ქულა 100-დან!`;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuizIndex = 0;
+            quizScore = 0;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-completed').classList.add('hidden');
+            loadQuizQuestion();
+        }
+
+        // Initialize quiz on load
+        window.onload = function() {
+            loadQuizQuestion();
+        }
+    </script>
+</body>
+</html>
