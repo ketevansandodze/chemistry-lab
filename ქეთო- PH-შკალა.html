@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ka" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pH-ის შკალა და ხსნარის არე</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                    colors: {
+                        ph0: '#b91c1c',
+                        ph1: '#dc2626',
+                        ph2: '#ea580c',
+                        ph3: '#f97316',
+                        ph4: '#fb923c',
+                        ph5: '#facc15',
+                        ph6: '#a3e635',
+                        ph7: '#22c55e',
+                        ph8: '#14b8a6',
+                        ph9: '#06b6d4',
+                        ph10: '#3b82f6',
+                        ph11: '#6366f1',
+                        ph12: '#8b5cf6',
+                        ph13: '#a855f7',
+                        ph14: '#7e22ce'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 4px solid #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s ease;
+        }
+        .custom-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        .gradient-ph {
+            background: linear-gradient(90deg, 
+                #b91c1c 0%, #dc2626 7.1%, #ea580c 14.2%, #f97316 21.4%, #fb923c 28.5%, 
+                #facc15 35.7%, #a3e635 42.8%, #22c55e 50%, #14b8a6 57.1%, #06b6d4 64.2%, 
+                #3b82f6 71.4%, #6366f1 78.5%, #8b5cf6 85.7%, #a855f7 92.8%, #7e22ce 100%
+            );
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-900 text-slate-100 font-sans antialiased flex flex-col overflow-x-hidden">
+
+    <header class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700/60 sticky top-0 z-50 px-4 lg:px-8 py-3 flex items-center justify-between shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-md shadow-cyan-500/20">
+                <i class="fa-solid fa-flask text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-white tracking-wide">pH-ის შკალა და ხსნარის არე</h1>
+                <p class="text-xs text-slate-400">ელექტროლიტური დისოციაცია და ხსნარები • თავი 1</p>
+            </div>
+        </div>
+        <nav class="flex items-center space-x-2 sm:space-x-4">
+            <button onclick="switchTab('explorer')" id="btn-explorer" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all bg-blue-600 text-white shadow-md shadow-blue-600/30 flex items-center space-x-2">
+                <i class="fa-solid fa-sliders"></i> <span class="hidden sm:inline">pH შკალა & პროდუქტები</span>
+            </button>
+            <button onclick="switchTab('indicators')" id="btn-indicators" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:bg-slate-700/50 flex items-center space-x-2">
+                <i class="fa-solid fa-vials"></i> <span class="hidden sm:inline">ინდიკატორები</span>
+            </button>
+            <button onclick="switchTab('calculator')" id="btn-calculator" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:bg-slate-700/50 flex items-center space-x-2">
+                <i class="fa-solid fa-calculator"></i> <span class="hidden sm:inline">გამოთვლები & ამოცანები</span>
+            </button>
+            <button onclick="switchTab('quiz')" id="btn-quiz" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:bg-slate-700/50 flex items-center space-x-2">
+                <i class="fa-solid fa-circle-question"></i> <span class="hidden sm:inline">ქვიზი</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+
+        <!-- SECTION 1: pH EXPLORER -->
+        <section id="tab-explorer" class="tab-content flex-1 flex flex-col space-y-6">
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-gauge-high text-cyan-400"></i>
+                            <span>ინტერაქტიული pH შკალა და იონთა კონცენტრაცია</span>
+                        </h2>
+                        <p class="text-sm text-slate-400 mt-1">გაანძრიეთ სლაიდერი pH-ის შესაცვლელად და დააკვირდით ჰიდროგონ-იონების ([H⁺]) და ჰიდროქსიდ-იონების ([OH⁻]) კონცენტრაციას, ასევე გარემოს ტიპს.</p>
+                    </div>
+                    <div id="badge-environment" class="px-4 py-2 rounded-xl text-sm font-bold shadow-lg border transition-all duration-300">
+                        ნეტრალური (pH = 7)
+                    </div>
+                </div>
+
+                <!-- Slider & Visual Bar -->
+                <div class="space-y-4">
+                    <div class="relative pt-2 pb-6">
+                        <div class="h-6 w-full rounded-full gradient-ph shadow-inner"></div>
+                        <input type="range" min="0" max="14" step="1" value="7" id="ph-slider" class="custom-slider absolute top-2 left-0 w-full opacity-0 cursor-pointer h-6 z-10" oninput="updatePh(this.value)">
+                        <!-- Marker indicators on bar -->
+                        <div class="flex justify-between px-1 text-xs text-slate-400 font-mono mt-2">
+                            <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span class="text-emerald-400 font-bold">7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Info Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 text-center">
+                        <div class="text-xs text-slate-400 uppercase font-semibold mb-1">pH-ის ზუსტი მნიშვნელობა</div>
+                        <div id="val-ph" class="text-3xl font-extrabold text-cyan-400 font-mono">7</div>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 text-center">
+                        <div class="text-xs text-slate-400 uppercase font-semibold mb-1">წყალბად-იონები [H⁺] (მოლი/ლ)</div>
+                        <div id="val-h" class="text-xl font-bold text-orange-400 font-mono">1.0 × 10⁻⁷</div>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 text-center">
+                        <div class="text-xs text-slate-400 uppercase font-semibold mb-1">ჰიდროქსიდ-იონები [OH⁻] (მოლი/ლ)</div>
+                        <div id="val-oh" class="text-xl font-bold text-indigo-400 font-mono">1.0 × 10⁻⁷</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Everyday Products from Textbook -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-lemon"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">მჟავე არე (pH < 7)</h3>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-4">წყალბად-იონების კონცენტრაცია აღემატება 1.0 × 10⁻⁷ მ-ს ([H⁺] > [OH⁻]).</p>
+                        <div class="space-y-2" id="acidic-products">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                    <button onclick="setPhDirect(1)" class="mt-4 w-full py-2 bg-red-600/20 hover:bg-red-600/30 border border-red-500/40 text-red-300 text-sm rounded-xl font-semibold transition-all">
+                        აჩვენე მჟავე არე (pH = 1)
+                    </button>
+                </div>
+
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-droplet"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">ნეტრალური არე (pH = 7)</h3>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-4">წყალბად-იონების და ჰიდროქსიდ-იონების კონცენტრაცია ტოლია: [H⁺] = [OH⁻] = 1.0 × 10⁻⁷ M.</p>
+                        <div class="space-y-2" id="neutral-products">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                    <button onclick="setPhDirect(7)" class="mt-4 w-full py-2 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-sm rounded-xl font-semibold transition-all">
+                        აჩვენე ნეტრალური არე (pH = 7)
+                    </button>
+                </div>
+
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-soap"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">ტუტე არე (pH > 7)</h3>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-4">წყალბად-იონების კონცენტრაცია ნაკლებია 1.0 × 10⁻⁷ მ-ზე ([H⁺] < [OH⁻]).</p>
+                        <div class="space-y-2" id="basic-products">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                    <button onclick="setPhDirect(13)" class="mt-4 w-full py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/40 text-purple-300 text-sm rounded-xl font-semibold transition-all">
+                        აჩვენე ტუტე არე (pH = 13)
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: INDICATORS LAB -->
+        <section id="tab-indicators" class="tab-content hidden flex-1 flex flex-col space-y-6">
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+                <h2 class="text-xl font-bold text-white flex items-center space-x-2 mb-2">
+                    <i class="fa-solid fa-vials text-cyan-400"></i>
+                    <span>ლაბორატორია: ინდიკატორების ფერები მჟავე, ნეტრალურ და ტუტე არეში</span>
+                </h2>
+                <p class="text-sm text-slate-400 mb-6">შეამოწმეთ როგორ იცვლიან ფერს სხვადასხვა ინდიკატორი ხსნარის არის მიხედვით.</p>
+
+                <!-- Environment selector buttons -->
+                <div class="flex flex-wrap gap-3 mb-8">
+                    <button onclick="setIndicatorEnvironment('acid')" id="env-btn-acid" class="px-5 py-2.5 rounded-xl font-semibold border transition-all bg-red-600/30 border-red-500 text-red-300 shadow-md">
+                        <i class="fa-solid fa-triangle-exclamation mr-2"></i> მჟავე არე (pH < 7)
+                    </button>
+                    <button onclick="setIndicatorEnvironment('neutral')" id="env-btn-neutral" class="px-5 py-2.5 rounded-xl font-semibold border transition-all bg-slate-700/50 border-slate-600 text-slate-300 hover:bg-slate-700">
+                        <i class="fa-solid fa-droplet mr-2"></i> ნეტრალური არე (pH = 7)
+                    </button>
+                    <button onclick="setIndicatorEnvironment('basic')" id="env-btn-basic" class="px-5 py-2.5 rounded-xl font-semibold border transition-all bg-slate-700/50 border-slate-600 text-slate-300 hover:bg-slate-700">
+                        <i class="fa-solid fa-circle-dot mr-2"></i> ტუტე არე (pH > 7)
+                    </button>
+                </div>
+
+                <!-- Indicators Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="indicators-grid">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- pH Meter & Paper info box -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl flex items-start space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl shrink-0 font-bold">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1">pH-მეტრი</h3>
+                        <p class="text-sm text-slate-300">ლაბორატორიაში pH-ის ზუსტად დასადგენად გამოიყენება ციფრული pH-მეტრი, რომელიც ელექტროდით ზომავს იონთა აქტივობას.</p>
+                    </div>
+                </div>
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl flex items-start space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0 font-bold">
+                        <i class="fa-solid fa-note-sticky"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1">ინდიკატორის ქაღალდი</h3>
+                        <p class="text-sm text-slate-300">უნივერსალური ინდიკატორის ქაღალდი იცვლის ფერს დასველებისთანავე, ფერი შედარდება სტანდარტულ შკალასთან.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: CALCULATOR & SOLVED EXAMPLES -->
+        <section id="tab-calculator" class="tab-content hidden flex-1 flex flex-col space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Interactive Calculator -->
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center space-x-2 mb-2">
+                            <i class="fa-solid fa-calculator text-cyan-400"></i>
+                            <span>pH-ის კალკულატორი</span>
+                        </h2>
+                        <p class="text-sm text-slate-400 mb-6">გამოთვალეთ pH ან [H⁺] ფორმულით: <span class="font-mono text-cyan-300 bg-slate-900 px-2 py-0.5 rounded">pH = -lg[H⁺]</span></p>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-1">აირჩიეთ სავარჯიშო ტიპი:</label>
+                                <select id="calc-type" onchange="toggleCalcMode()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500">
+                                    <option value="fromH">მოვძებნოთ pH, თუ ცნობილია [H⁺]</option>
+                                    <option value="fromOH">მოვძებნოთ pH, თუ ცნობილია ტუტე [OH⁻] (მაგ. NaOH)</option>
+                                </select>
+                            </div>
+
+                            <div id="group-h-input">
+                                <label class="block text-sm font-medium text-slate-300 mb-1">წყალბად-იონების კონცენტრაცია [H⁺] (მაგ: 1e-4):</label>
+                                <input type="text" id="input-h-val" value="1e-4" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono focus:outline-none focus:border-cyan-500" placeholder="მაგ: 1e-4 ან 0.0001">
+                            </div>
+
+                            <div id="group-oh-input" class="hidden">
+                                <label class="block text-sm font-medium text-slate-300 mb-1">ტუტეს კონცენტრაცია C(NaOH) მოლი/ლ (მაგ: 0.01):</label>
+                                <input type="text" id="input-oh-val" value="0.01" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono focus:outline-none focus:border-cyan-500" placeholder="მაგ: 0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button onclick="calculatePh()" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg shadow-cyan-500/25 transition-all">
+                            გამოთვლა
+                        </button>
+
+                        <div id="calc-result" class="mt-4 p-4 rounded-xl bg-slate-900/80 border border-slate-700/80 font-mono text-sm hidden">
+                            <!-- Injected Result -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solved Example from Textbook (ამოცანის ამოხსნის ნიმუში - 6) -->
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-book-open"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">ამოცანის ამოხსნის ნიმუში - 6</h3>
+                        </div>
+
+                        <div class="space-y-4 text-sm text-slate-300">
+                            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/50">
+                                <span class="font-bold text-cyan-400">ა)</span> გამოთვალეთ მჟავას ხსნარის pH, თუ მასში წყალბად-იონების კონცენტრაცია არის <span class="font-mono text-white">[H⁺] = 1.0 · 10⁻⁴ M</span>.
+                            </div>
+                            <div class="p-3 bg-slate-900/40 rounded-xl font-mono text-xs text-slate-300 space-y-1">
+                                <div>pH = -lg[H⁺]</div>
+                                <div>pH = -lg(1.0 · 10⁻⁴) = -(-4.00) = 4.00</div>
+                                <div class="text-emerald-400 font-bold pt-1">პასუხი: pH = 4.00 (მჟავე არე)</div>
+                            </div>
+
+                            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/50">
+                                <span class="font-bold text-cyan-400">ბ)</span> გამოთვალეთ ნატრიუმის ტუტე NaOH (0.01 მოლი/ლ) ხსნარის pH.
+                            </div>
+                            <div class="p-3 bg-slate-900/40 rounded-xl font-mono text-xs text-slate-300 space-y-1">
+                                <div>[OH⁻] = 0.01 = 1.0 · 10⁻² M</div>
+                                <div>[H⁺] = K<sub>w</sub> / [OH⁻] = 10⁻¹⁴ / 10⁻² = 10⁻¹² M</div>
+                                <div>pH = -lg(10⁻¹²) = 12.00</div>
+                                <div class="text-purple-400 font-bold pt-1">პასუხი: pH = 12.00 (ტუტე არე)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: QUIZ & KNOWLEDGE CHECK -->
+        <section id="tab-quiz" class="tab-content hidden flex-1 flex flex-col space-y-6">
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl backdrop-blur-sm max-w-3xl mx-auto w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-circle-question text-cyan-400"></i>
+                        <span>ცოდნის შემოწმება (ქვიზი)</span>
+                    </h2>
+                    <span id="quiz-progress" class="text-xs font-mono bg-slate-900 px-3 py-1.5 rounded-full border border-slate-700 text-cyan-300">კითხვა 1 / 4</span>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Everyday products dataset
+        const productsData = [
+            { name: "აბუმულატორის მჟავა", ph: 0, type: "acid", icon: "fa-car-battery" },
+            { name: "კუჭის წვენი", ph: 1, type: "acid", icon: "fa-utensils" },
+            { name: "ლიმონის წვენი", ph: 2, type: "acid", icon: "fa-lemon" },
+            { name: "ძმარი / ფორთოხლის წვენი", ph: 3, type: "acid", icon: "fa-wine-bottle" },
+            { name: "ყავა", ph: 5, type: "acid", icon: "fa-mug-hot" },
+            { name: "რძე", ph: 6, type: "neutral", icon: "fa-glass-water" },
+            { name: "სუფთა წყალი / სისხლი", ph: 7, type: "neutral", icon: "fa-droplet" },
+            { name: "ზღვის წყალი", ph: 8, type: "basic", icon: "fa-water" },
+            { name: "სოდა / საპონი", ph: 9, type: "basic", icon: "fa-soap" },
+            { name: "ამიაკის საწმენდი სითხე", ph: 11, type: "basic", icon: "fa-spray-can-sparkles" }
+        ];
+
+        // Indicators data
+        const indicatorsData = {
+            acid: [
+                { name: "ლაკმუსი", colorName: "წითელი", bgClass: "bg-red-600", textClass: "text-red-200" },
+                { name: "მეტილნარინჯი", colorName: "მოვარდისფრო-წითელი", bgClass: "bg-rose-600", textClass: "text-rose-200" },
+                { name: "ფენოლფთალეინი", colorName: "უფერო", bgClass: "bg-slate-200", textClass: "text-slate-800" },
+                { name: "უნივერსალური ინდიკატორი", colorName: "წითელი", bgClass: "bg-red-500", textClass: "text-red-100" }
+            ],
+            neutral: [
+                { name: "ლაკმუსი", colorName: "იისფერი", bgClass: "bg-purple-600", textClass: "text-purple-200" },
+                { name: "მეტილნარინჯი", colorName: "ნარინჯისფერი", bgClass: "bg-amber-500", textClass: "text-amber-950" },
+                { name: "ფენოლფთალეინი", colorName: "უფერო", bgClass: "bg-slate-200", textClass: "text-slate-800" },
+                { name: "უნივერსალური ინდიკატორი", colorName: "მწვანე", bgClass: "bg-emerald-600", textClass: "text-emerald-100" }
+            ],
+            basic: [
+                { name: "ლაკმუსი", colorName: "ლურჯი", bgClass: "bg-blue-600", textClass: "text-blue-200" },
+                { name: "მეტილნარინჯი", colorName: "ყვითელი", bgClass: "bg-yellow-400", textClass: "text-yellow-950" },
+                { name: "ფენოლფთალეინი", colorName: "ჟოლოსფერი", bgClass: "bg-pink-600", textClass: "text-pink-100" },
+                { name: "უნივერსალური ინდიკატორი", colorName: "იისფერი", bgClass: "bg-purple-700", textClass: "text-purple-100" }
+            ]
+        };
+
+        // Quiz questions
+        const quizData = [
+            {
+                question: "რატომაა სუფთა წყლის pH ტოლი 7-ის?",
+                options: [
+                    "რადგან წყალში [H⁺] და [OH⁻] იონების კონცენტრაციები ტოლია (1.0 × 10⁻⁷ M)",
+                    "რადგან წყალი ძლიერი მჟავაა",
+                    "რადგან წყალი ძლიერი ტუტეა",
+                    "რადგან წყალში მხოლოდ ტუტე იონებია"
+                ],
+                correct: 0
+            },
+            {
+                question: "განსაზღვრეთ pH, თუ წყალბად-იონების კონცენტრაციაა [H⁺] = 1 × 10⁻² მოლი/ლ:",
+                options: ["pH = 12", "pH = 2", "pH = 7", "pH = -2"],
+                correct: 1
+            },
+            {
+                question: "A ხსნარის pH 4-ის ტოლია, ხოლო B ხსნარისა — 6-ის. რომელი მათგანის მჟავიანობაა უფრო მეტი?",
+                options: ["B ხსნარის", "ორივეს ერთნაირი მჟავიანობა აქვს", "A ხსნარის (რადგან pH ნაკლებია და [H⁺] მეტია)", "არცერთს არ აქვს მჟავიანობა"],
+                correct: 2
+            },
+            {
+                question: "როგორ იცვლის ფერს ფენოლფთალეინი ტუტე არეში?",
+                options: ["ხდება წითელი", "რჩება უფერო", "ხდება ჟოლოსფერი", "ხდება მწვანე"],
+                correct: 2
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+
+        // Tab switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-600/30');
+                btn.classList.add('text-slate-300', 'hover:bg-slate-700/50');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-700/50');
+            activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-600/30');
+
+            if(tabId === 'indicators') renderIndicators('acid');
+            if(tabId === 'quiz') renderQuiz();
+        }
+
+        // Update pH explorer
+        function updatePh(val) {
+            const ph = parseInt(val);
+            document.getElementById('ph-slider').value = ph;
+            document.getElementById('val-ph').innerText = ph;
+
+            let ohExp = 14 - ph;
+
+            document.getElementById('val-h').innerText = ph === 7 ? "1.0 × 10⁻⁷" : `1.0 × 10⁻${ph}`;
+            document.getElementById('val-oh').innerText = ph === 7 ? "1.0 × 10⁻⁷" : `1.0 × 10⁻${ohExp}`;
+
+            const badge = document.getElementById('badge-environment');
+            if(ph < 7) {
+                badge.className = "px-4 py-2 rounded-xl text-sm font-bold shadow-lg border bg-red-500/20 text-red-300 border-red-500/50";
+                badge.innerText = `მჟავე არე (pH = ${ph} < 7)`;
+            } else if(ph === 7) {
+                badge.className = "px-4 py-2 rounded-xl text-sm font-bold shadow-lg border bg-emerald-500/20 text-emerald-300 border-emerald-500/50";
+                badge.innerText = `ნეტრალური არე (pH = 7, [H⁺] = [OH⁻])`;
+            } else {
+                badge.className = "px-4 py-2 rounded-xl text-sm font-bold shadow-lg border bg-purple-500/20 text-purple-300 border-purple-500/50";
+                badge.innerText = `ტუტე არე (pH = ${ph} > 7)`;
+            }
+        }
+
+        function setPhDirect(val) {
+            document.getElementById('ph-slider').value = val;
+            updatePh(val);
+        }
+
+        // Populate Products lists
+        function populateProducts() {
+            const acidicContainer = document.getElementById('acidic-products');
+            const neutralContainer = document.getElementById('neutral-products');
+            const basicContainer = document.getElementById('basic-products');
+
+            acidicContainer.innerHTML = '';
+            neutralContainer.innerHTML = '';
+            basicContainer.innerHTML = '';
+
+            productsData.forEach(p => {
+                const itemHTML = `<div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/50 border border-slate-700/40 text-xs">
+                    <span class="flex items-center space-x-2 text-slate-200"><i class="fa-solid ${p.icon} text-cyan-400"></i><span>${p.name}</span></span>
+                    <span class="font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-cyan-300">pH ${p.ph}</span>
+                </div>`;
+
+                if(p.ph < 7) acidicContainer.innerHTML += itemHTML;
+                else if(p.ph === 7) neutralContainer.innerHTML += itemHTML;
+                else basicContainer.innerHTML += itemHTML;
+            });
+        }
+
+        // Indicators rendering
+        function setIndicatorEnvironment(env) {
+            ['acid', 'neutral', 'basic'].forEach(e => {
+                const btn = document.getElementById(`env-btn-${e}`);
+                if(e === env) {
+                    btn.className = "px-5 py-2.5 rounded-xl font-semibold border transition-all bg-blue-600/30 border-blue-500 text-blue-200 shadow-md";
+                } else {
+                    btn.className = "px-5 py-2.5 rounded-xl font-semibold border transition-all bg-slate-700/50 border-slate-600 text-slate-300 hover:bg-slate-700";
+                }
+            });
+            renderIndicators(env);
+        }
+
+        function renderIndicators(env) {
+            const grid = document.getElementById('indicators-grid');
+            grid.innerHTML = '';
+            indicatorsData[env].forEach(ind => {
+                grid.innerHTML += `
+                    <div class="bg-slate-900/70 border border-slate-700/60 rounded-2xl p-5 flex flex-col items-center text-center space-y-4">
+                        <div class="w-16 h-24 rounded-xl ${ind.bgClass} shadow-lg flex items-center justify-center font-bold text-xs ${ind.textClass} border border-white/20">
+                            ტესტი
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-base">${ind.name}</h4>
+                            <p class="text-xs text-slate-400 mt-1">ფერი: <span class="font-semibold text-white">${ind.colorName}</span></p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Calculator mode toggle
+        function toggleCalcMode() {
+            const type = document.getElementById('calc-type').value;
+            if(type === 'fromH') {
+                document.getElementById('group-h-input').classList.remove('hidden');
+                document.getElementById('group-oh-input').classList.add('hidden');
+            } else {
+                document.getElementById('group-h-input').classList.add('hidden');
+                document.getElementById('group-oh-input').classList.remove('hidden');
+            }
+        }
+
+        // Calculation logic
+        function calculatePh() {
+            const type = document.getElementById('calc-type-val')?.value || document.getElementById('calc-type').value;
+            const resBox = document.getElementById('calc-result');
+            resBox.classList.remove('hidden');
+
+            try {
+                if(type === 'fromH') {
+                    const hValStr = document.getElementById('input-h-val').value.trim();
+                    const hVal = parseFloat(hValStr);
+                    if(isNaN(hVal) || hVal <= 0) throw new Error("შეიყვანეთ დადებითი რიცხვი!");
+                    
+                    const ph = -Math.log10(hVal);
+                    let envText = ph < 7 ? "მჟავე არე" : (ph === 7 ? "ნეტრალური არე" : "ტუტე არე");
+                    resBox.innerHTML = `
+                        <div class="text-cyan-400 font-bold mb-1">გამოთვლის შედეგი:</div>
+                        <div>[H⁺] = ${hVal} მოლი/ლ</div>
+                        <div>pH = -lg(${hVal}) = <span class="text-white font-bold">${ph.toFixed(2)}</span></div>
+                        <div class="text-emerald-400 mt-1 font-bold">გარემო: ${envText}</div>
+                    `;
+                } else {
+                    const ohValStr = document.getElementById('input-oh-val').value.trim();
+                    const ohVal = parseFloat(ohValStr);
+                    if(isNaN(ohVal) || ohVal <= 0) throw new Error("შეიყვანეთ დადებითი რიცხვი!");
+
+                    const hVal = Math.pow(10, -14) / ohVal;
+                    const ph = -Math.log10(hVal);
+                    resBox.innerHTML = `
+                        <div class="text-cyan-400 font-bold mb-1">გამოთვლის შედეგი (ტუტე):</div>
+                        <div>[OH⁻] = ${ohVal} მოლი/ლ</div>
+                        <div>[H⁺] = 10⁻¹⁴ / ${ohVal} = ${hVal.toExponential(2)} მოლი/ლ</div>
+                        <div>pH = <span class="text-white font-bold">${ph.toFixed(2)}</span></div>
+                        <div class="text-purple-400 mt-1 font-bold">გარემო: ტუტე არე (pH > 7)</div>
+                    `;
+                }
+            } catch(err) {
+                resBox.innerHTML = `<span class="text-red-400 font-bold">შეცდომა: ${err.message}</span>`;
+            }
+        }
+
+        // Quiz rendering
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            if(currentQuizIndex >= quizData.length) {
+                container.innerHTML = `
+                    <div class="text-center py-8 space-y-4">
+                        <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-3xl mx-auto font-bold">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">ქვიზი დასრულებულია!</h3>
+                        <p class="text-slate-300">თქვენი შედეგი: <span class="text-cyan-400 font-bold text-xl">${score} / ${quizData.length}</span> სწორი პასუხი.</p>
+                        <button onclick="resetQuiz()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg transition-all">
+                            თავიდან დაწყება
+                        </button>
+                    </div>
+                `;
+                document.getElementById('quiz-progress').innerText = `დასრულებულია`;
+                return;
+            }
+
+            const q = quizData[currentQuizIndex];
+            document.getElementById('quiz-progress').innerText = `კითხვა ${currentQuizIndex + 1} / ${quizData.length}`;
+
+            let optionsHtml = '';
+            q.options.forEach((opt, idx) => {
+                optionsHtml += `
+                    <button onclick="checkAnswer(${idx})" class="w-full text-left p-4 rounded-xl bg-slate-900/60 border border-slate-700/60 hover:border-cyan-500/60 hover:bg-slate-900 text-slate-200 transition-all font-medium flex items-center space-x-3">
+                        <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-400 font-bold text-xs shrink-0">${String.fromCharCode(65 + idx)}</span>
+                        <span>${opt}</span>
+                    </button>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">${q.question}</h3>
+                    <div class="space-y-3 pt-2">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkAnswer(selectedIdx) {
+            const q = quizData[currentQuizIndex];
+            if(selectedIdx === q.correct) {
+                score++;
+            }
+            currentQuizIndex++;
+            renderQuiz();
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            renderQuiz();
+        }
+
+        window.onload = function() {
+            populateProducts();
+            updatePh(7);
+        }
+    </script>
+</body>
+</html>
