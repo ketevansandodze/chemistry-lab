@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ka" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>იონური მიმოცვლის რეაქციები ქიმიაში</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        }
+        .glow-effect { animation: pulse-glow 3s infinite; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-slate-100 min-h-full flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                    <i class="fa-solid fa-flask-vial text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base sm:text-lg bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">იონური მიმოცვლის რეაქციები</h1>
+                    <p class="text-xs text-slate-400">ქიმია &bull; ინტერაქტიული გაკვეთილი</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-1 bg-slate-800/60 p-1.5 rounded-xl border border-slate-700">
+                <button onclick="switchTab('theory')" id="nav-theory" class="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow">თეორია</button>
+                <button onclick="switchTab('simulator')" id="nav-simulator" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white">ლაბორატორია</button>
+                <button onclick="switchTab('solubility')" id="nav-solubility" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white">ხსნადობის ცხრილი</button>
+                <button onclick="switchTab('tasks')" id="nav-tasks" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white">ტესტები & ამოცანები</button>
+            </nav>
+            <div class="flex items-center space-x-2">
+                <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse mr-1.5"></span>
+                    ცენტრიდანული სწავლება
+                </span>
+            </div>
+        </div>
+        <!-- Mobile Navigation -->
+        <div class="md:hidden flex overflow-x-auto space-x-1 px-4 pb-3 pt-1 border-t border-slate-800 bg-slate-900/95">
+            <button onclick="switchTab('theory')" id="mob-nav-theory" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap bg-indigo-600 text-white">თეორია</button>
+            <button onclick="switchTab('simulator')" id="mob-nav-simulator" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap text-slate-300">ლაბი</button>
+            <button onclick="switchTab('solubility')" id="mob-nav-solubility" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap text-slate-300">ხსნადობა</button>
+            <button onclick="switchTab('tasks')" id="mob-nav-tasks" class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap text-slate-300">ტესტები</button>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+
+        <section id="tab-theory" class="space-y-6">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-950 border border-indigo-500/30 p-6 sm:p-8 shadow-2xl">
+                <div class="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-10 -translate-y-10">
+                    <i class="fa-solid fa-atom text-9xl text-cyan-400"></i>
+                </div>
+                <div class="max-w-3xl">
+                    <span class="text-cyan-400 font-semibold text-xs uppercase tracking-wider">ძირითადი კანონზომიერება</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white mt-1 mb-4">იონური მიმოცვლის რეაქციები და მათი ბოლომდე წასვლის პირობები</h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                        ელექტროლიტების წყალხსნარებში მიმდინარე რეაქციებს, რომელთა დროსაც რეაგენტები ნაწილდებიან იონებად და ცვლიან შემადგენელ ნაწილებს, იონური მიმოცვლის რეაქციები ეწოდება.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-slate-900/80 p-4 rounded-2xl border border-cyan-500/20">
+                            <h3 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-cloud-arrow-down text-cyan-400 mr-2"></i>ნალექის გამოყოფა</h3>
+                            <p class="text-xs text-slate-400">იონები უერთდებიან ერთმანეთს და ქმნიან წყალში უხსნად ნაერთს (<code class="text-cyan-300 font-mono">↓</code>).</p>
+                        </div>
+                        <div class="bg-slate-900/80 p-4 rounded-2xl border border-indigo-500/20">
+                            <h3 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-water text-indigo-400 mr-2"></i>წყლის წარმოქმნა</h3>
+                            <p class="text-xs text-slate-400">მჟავისა და ფუძის ნეტრალიზაციისას წარმოიქმნება მცირედ დისოცირებადი მოლეკულა — წყალი (<code class="text-indigo-300 font-mono">H₂O</code>).</p>
+                        </div>
+                        <div class="bg-slate-900/80 p-4 rounded-2xl border border-emerald-500/20">
+                            <h3 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-wind text-emerald-400 mr-2"></i>აირის გამოყოფა</h3>
+                            <p class="text-xs text-slate-400">რეაქციის შედეგად გამოიყოფა აირი (<code class="text-emerald-300 font-mono">↑</code>), რომელიც ტოვებს სარეაქციო არის.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed breakdown cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                    <h3 class="text-lg font-bold text-white mb-3 flex items-center">
+                        <i class="fa-solid fa-list-check text-cyan-400 mr-2"></i> მოკლე იონური ტოლობის შედგენის წესი
+                    </h3>
+                    <ol class="text-sm text-slate-300 space-y-3 leading-relaxed list-decimal list-inside">
+                        <li>დაწერეთ მოლური (მოლეკულური) რეაქციის ტოლობა და გაათანაბრეთ კოეფიციენტები.</li>
+                        <li>ხსნადობის ცხრილის გამოყენებით განსაზღვრეთ რომელი ნივთიერებაა ხსნადი (იშლება იონებად) და რომელი — უხსნადი, აირადი ან სუსტი ელექტროლიტი (რჩება მოლეკულის სახით).</li>
+                        <li>ჩაწერეთ სრული იონური ტოლობა (ყოველი ხსნადი ელექტროლიტი დაშალეთ კატიონებად და ანიონებად).</li>
+                        <li>შეჭერით (გამორიცხეთ) ორივე მხარეს არსებული იდენტური იონები და მიიღეთ <b>მოკლე იონური ტოლობა</b>.</li>
+                    </ol>
+                </div>
+
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl">
+                    <h3 class="text-lg font-bold text-white mb-3 flex items-center">
+                        <i class="fa-solid fa-book-open text-indigo-400 mr-2"></i> კლასიკური მაგალითი: ნეტრალიზაცია
+                    </h3>
+                    <p class="text-sm text-slate-300 mb-4 leading-relaxed">
+                        განვიხილოთ ნატრიუმის ჰიდროქსიდისა და მარილმჟავას ურთიერთქმედება:
+                    </p>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-indigo-300 space-y-2">
+                        <div><b>მოლეკულური:</b> NaOH + HCl → NaCl + H₂O</div>
+                        <div><b>სრული იონური:</b> Na⁺ + OH⁻ + H⁺ + Cl⁻ → Na⁺ + Cl⁻ + H₂O</div>
+                        <div class="text-cyan-400 pt-1 border-t border-slate-800"><b>მოკლე იონური:</b> H⁺ + OH⁻ → H₂O</div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-4">
+                        ეს მოკლე იონური ტოლობა ადასტურებს, რომ ნებისმიერი ძლიერი ტუტისა და ძლიერი მჟავის ნეტრალიზაციის საფუძველი არის წყალბად-იონისა და ჰიდროქსიდ-იონის შერწყმა წყლის მოლეკულად.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-simulator" class="hidden space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+                <div class="max-w-2xl mb-6">
+                    <span class="text-cyan-400 font-semibold text-xs uppercase tracking-wider">ვირტუალური ლაბორატორია</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">იონური მიმოცვლის რეაქციების სიმულატორი</h2>
+                    <p class="text-slate-400 text-sm">აირჩიეთ რეაგენტები, შეურიეთ ერთმანეთს და დააკვირდით მოლეკულურ, სრულ იონურ და მოკლე იონურ ტოლობებს.</p>
+                </div>
+
+                <!-- Reaction Selectors -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                    <button onclick="selectReaction('neutralization')" id="rxn-btn-neutralization" class="p-4 rounded-2xl border border-indigo-500/40 bg-indigo-600/20 text-left transition-all shadow-md">
+                        <span class="block font-bold text-white text-sm mb-1">ნეტრალიზაცია</span>
+                        <span class="text-xs text-slate-300 font-mono">NaOH + HCl</span>
+                    </button>
+                    <button onclick="selectReaction('precipitate')" id="rxn-btn-precipitate" class="p-4 rounded-2xl border border-slate-800 bg-slate-950 text-left transition-all hover:border-slate-700">
+                        <span class="block font-bold text-white text-sm mb-1">ნალექის წარმოქმნა</span>
+                        <span class="text-xs text-slate-400 font-mono">BaCl₂ + H₂SO₄</span>
+                    </button>
+                    <button onclick="selectReaction('gas')" id="rxn-btn-gas" class="p-4 rounded-2xl border border-slate-800 bg-slate-950 text-left transition-all hover:border-slate-700">
+                        <span class="block font-bold text-white text-sm mb-1">აირის გამოყოფა</span>
+                        <span class="text-xs text-slate-400 font-mono">Na₂CO₃ + 2HCl</span>
+                    </button>
+                    <button onclick="selectReaction('weakacid')" id="rxn-btn-weakacid" class="p-4 rounded-2xl border border-slate-800 bg-slate-950 text-left transition-all hover:border-slate-700">
+                        <span class="block font-bold text-white text-sm mb-1">სუსტი მჟავა</span>
+                        <span class="text-xs text-slate-400 font-mono">CH₃COONa + HCl</span>
+                    </button>
+                </div>
+
+                <!-- Simulation Visualizer Screen -->
+                <div class="bg-slate-950 rounded-2xl border border-slate-800 p-6 space-y-6">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-2xl font-bold" id="sim-icon">
+                                <i class="fa-solid fa-flask"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-lg" id="sim-name">ნეტრალიზაციის რეაქცია</h3>
+                                <p class="text-xs text-slate-400" id="sim-desc">ნატრიუმის ჰიდროქსიდისა და მარილმჟავას ურთიერთქმედება.</p>
+                            </div>
+                        </div>
+                        <button onclick="runSimulation()" class="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-medium rounded-xl transition-all shadow-lg shadow-cyan-600/30 text-xs sm:text-sm">
+                            <i class="fa-solid fa-play mr-2"></i> რეაქციის გაშვება
+                        </button>
+                    </div>
+
+                    <!-- Equations Display -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
+                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                            <span class="text-slate-400 block mb-2 font-sans font-semibold text-cyan-400">1. მოლეკულური ტოლობა</span>
+                            <div id="eq-molecular" class="text-slate-200 overflow-x-auto py-1">NaOH + HCl → NaCl + H₂O</div>
+                        </div>
+                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                            <span class="text-slate-400 block mb-2 font-sans font-semibold text-indigo-400">2. სრული იონური ტოლობა</span>
+                            <div id="eq-full" class="text-slate-200 overflow-x-auto py-1">Na⁺ + OH⁻ + H⁺ + Cl⁻ → Na⁺ + Cl⁻ + H₂O</div>
+                        </div>
+                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                            <span class="text-slate-400 block mb-2 font-sans font-semibold text-emerald-400">3. მოკლე იონური ტოლობა</span>
+                            <div id="eq-net" class="text-slate-200 overflow-x-auto py-1 font-bold text-emerald-300">H⁺ + OH⁻ → H₂O</div>
+                        </div>
+                    </div>
+
+                    <!-- Particle Box Animation -->
+                    <div class="w-full h-40 bg-slate-900/50 rounded-xl border border-slate-800 relative overflow-hidden flex flex-wrap items-center justify-center p-4 gap-3" id="sim-particles">
+                        <!-- Particles injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-solubility" class="hidden space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+                <div class="max-w-2xl mb-6">
+                    <span class="text-cyan-400 font-semibold text-xs uppercase tracking-wider">სახელმძღვანელოს დანართი</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">ნივთიერებათა ხსნადობა წყალში</h2>
+                    <p class="text-slate-400 text-sm">მოკლე საცნობარო ცხრილი მჟავების, ფუძეებისა და მარილების ხსნადობის დასადგენად.</p>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-800 mb-6">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <thead class="bg-slate-950 text-slate-300 uppercase tracking-wider font-semibold border-b border-slate-800">
+                            <tr>
+                                <th class="p-4">ანიონები / კატიონები</th>
+                                <th class="p-4">H⁺</th>
+                                <th class="p-4">Na⁺, K⁺</th>
+                                <th class="p-4">NH₄⁺</th>
+                                <th class="p-4">Ba²⁺</th>
+                                <th class="p-4">Ca²⁺</th>
+                                <th class="p-4">Cu²⁺, Zn²⁺</th>
+                                <th class="p-4">Ag⁺</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-slate-300">
+                            <tr class="hover:bg-slate-950/50">
+                                <td class="p-4 font-mono font-bold text-cyan-400">OH⁻ (ჰიდროქსიდები)</td>
+                                <td class="p-4 text-slate-500">—</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ (ხსნადი)</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-amber-400">მ (მცირედ)</td>
+                                <td class="p-4 text-red-400 font-bold">უ (უხსნადი)</td>
+                                <td class="p-4 text-red-400 font-bold">უ</td>
+                            </tr>
+                            <tr class="hover:bg-slate-950/50">
+                                <td class="p-4 font-mono font-bold text-cyan-400">Cl⁻ (ქლორიდები)</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-red-400 font-bold">უ (ნალექი ↓)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-950/50">
+                                <td class="p-4 font-mono font-bold text-cyan-400">SO₄²⁻ (სულფატები)</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-red-400 font-bold">უ (ნალექი ↓)</td>
+                                <td class="p-4 text-amber-400">მ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-amber-400">მ</td>
+                            </tr>
+                            <tr class="hover:bg-slate-950/50">
+                                <td class="p-4 font-mono font-bold text-cyan-400">CO₃²⁻ (კარბონატები)</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ (იშლება)</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-red-400 font-bold">უ (ნალექი ↓)</td>
+                                <td class="p-4 text-red-400 font-bold">უ</td>
+                                <td class="p-4 text-red-400 font-bold">უ</td>
+                                <td class="p-4 text-red-400 font-bold">უ</td>
+                            </tr>
+                            <tr class="hover:bg-slate-950/50">
+                                <td class="p-4 font-mono font-bold text-cyan-400">PO₄³⁻ (ფოსფატები)</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-emerald-400 font-bold">ხ</td>
+                                <td class="p-4 text-amber-400">მ</td>
+                                <td class="p-4 text-red-400 font-bold">უ</td>
+                                <td class="p-4 text-red-400 font-bold">უ</td>
+                                <td class="p-4 text-red-400 font-bold">უ</td>
+                                <td class="p-4 text-red-400 font-bold">უ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex items-center space-x-4">
+                    <div class="text-cyan-400 text-xl"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="text-xs text-slate-300 leading-relaxed">
+                        <b>მინიშნება:</b> იონური მიმოცვლის რეაქცია ბოლომდე მხოლოდ მაშინ მიდის, თუ რეაგენტების იონებიდან წარმოიქმნება <b>უხსნადი ნაერთი (ნალექი ↓)</b>, <b>აირი (↑)</b> ან <b>სუსტი ელექტროლიტი (წყალი H₂O)</b>. წინააღმდეგ შემთხვევაში რეაქცია შექცევადია ან პრაქტიკულად არ მიმდინარეობს.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-tasks" class="hidden space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <span class="text-cyan-400 font-semibold text-xs uppercase tracking-wider">თვითშემოწმება</span>
+                        <h2 class="text-2xl font-extrabold text-white mt-1">კითხვები და ამოცანები</h2>
+                    </div>
+                    <div class="text-xs font-mono px-3 py-1.5 rounded-xl bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                        ინტერაქტიული ტესტი
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Task 1 -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="font-bold text-white text-xs sm:text-sm">1. რომელი პირობა უზრუნველყოფს იონური მიმოცვლის რეაქციის ბოლომდე წასვლას?</h3>
+                            <button onclick="toggleAnswer('ans-1')" class="text-xs text-cyan-400 hover:text-cyan-300 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 whitespace-nowrap ml-2">პასუხი</button>
+                        </div>
+                        <p id="ans-1" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 p-4 rounded-xl border border-slate-800 leading-relaxed">
+                            <b>პასუხი:</b> რეაქცია ბოლომდე მიდის, თუ რეაქციის შედეგად წარმოიქმნება <b>ნალექი (↓)</b>, <b>აირი (↑)</b> ან <b>სუსტი ელექტროლიტი (მაგ. წყალი H₂O)</b>.
+                        </p>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="font-bold text-white text-xs sm:text-sm">2. შედგენილია ბარიუმის ქლორიდისა და გოგირდმჟავას რეაქციის სრული იონური ტოლობა. რა იონი გამოისახება ნალექის სახით?</h3>
+                            <button onclick="toggleAnswer('ans-2')" class="text-xs text-cyan-400 hover:text-cyan-300 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 whitespace-nowrap ml-2">პასუხი</button>
+                        </div>
+                        <p id="ans-2" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 p-4 rounded-xl border border-slate-800 leading-relaxed font-mono">
+                            <b>პასუხი:</b> წარმოიქმნება ბარიუმის სულფატის თეთრი ნალექი: <br>
+                            Ba²⁺ + SO₄²⁻ → BaSO₄↓
+                        </p>
+                    </div>
+
+                    <!-- Task 3 -->
+                    <div class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="font-bold text-white text-xs sm:text-sm">3. შეესაბამება თუ არა მოკლე იონური ტოლობა <span class="text-cyan-300 font-mono">H⁺ + OH⁻ → H₂O</span> ნებისმიერი ძლიერი ტუტისა და ძლიერი მჟავის ურთიერთქმედებას?</h3>
+                            <button onclick="toggleAnswer('ans-3')" class="text-xs text-cyan-400 hover:text-cyan-300 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-500/20 whitespace-nowrap ml-2">პასუხი</button>
+                        </div>
+                        <p id="ans-3" class="hidden mt-3 text-xs text-slate-300 bg-slate-900 p-4 rounded-xl border border-slate-800 leading-relaxed">
+                            <b>პასუხი:</b> <b>დიახ, სრულად შეესაბამება.</b> ყველა ძლიერი ტუტე და ძლიერი მჟავა წყალხსნარში სრულად იშლება იონებად და პროცესის არსი არის წყალბად-იონისა და ჰიდროქსიდ-იონის შერწყმა.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800 bg-slate-900/90 text-center py-4 text-xs text-slate-500">
+        ქიმიის ინტერაქტიული გაკვეთილი &bull; იონური მიმოცვლის რეაქციები
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            const tabs = ['theory', 'simulator', 'solubility', 'tasks'];
+            tabs.forEach(t => {
+                const sec = document.getElementById('tab-' + t);
+                if (sec) sec.classList.add('hidden');
+                
+                const btnDesktop = document.getElementById('nav-' + t);
+                const btnMobile = document.getElementById('mob-nav-' + t);
+                if(btnDesktop) {
+                    btnDesktop.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white";
+                }
+                if(btnMobile) {
+                    btnMobile.className = "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap text-slate-300";
+                }
+            });
+
+            const activeSec = document.getElementById('tab-' + tabId);
+            if (activeSec) activeSec.classList.remove('hidden');
+
+            const activeDesktop = document.getElementById('nav-' + tabId);
+            const activeMobile = document.getElementById('mob-nav-' + tabId);
+            if(activeDesktop) {
+                activeDesktop.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow";
+            }
+            if(activeMobile) {
+                activeMobile.className = "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap bg-indigo-600 text-white";
+            }
+        }
+
+        function toggleAnswer(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        let currentRxn = 'neutralization';
+
+        const rxnData = {
+            'neutralization': {
+                name: "ნეტრალიზაციის რეაქცია",
+                desc: "ნატრიუმის ჰიდროქსიდისა და მარილმჟავას ურთიერთქმედება.",
+                icon: '<i class="fa-solid fa-flask"></i>',
+                molecular: "NaOH + HCl → NaCl + H₂O",
+                full: "Na⁺ + OH⁻ + H⁺ + Cl⁻ → Na⁺ + Cl⁻ + H₂O",
+                net: "H⁺ + OH⁻ → H₂O",
+                particles: [
+                    { label: 'H⁺', color: 'bg-red-500 text-white' },
+                    { label: 'OH⁻', color: 'bg-blue-500 text-white' },
+                    { label: 'H₂O', color: 'bg-indigo-600 text-white' },
+                    { label: 'Na⁺', color: 'bg-amber-500 text-white' },
+                    { label: 'Cl⁻', color: 'bg-cyan-500 text-white' }
+                ]
+            },
+            'precipitate': {
+                name: "ნალექის წარმოქმნის რეაქცია",
+                desc: "ბარიუმის ქლორიდისა და გოგირდმჟავას ურთიერთქმედება (თეთრი ნალექი).",
+                icon: '<i class="fa-solid fa-cloud-arrow-down"></i>',
+                molecular: "BaCl₂ + H₂SO₄ → BaSO₄↓ + 2HCl",
+                full: "Ba²⁺ + 2Cl⁻ + 2H⁺ + SO₄²⁻ → BaSO₄↓ + 2H⁺ + 2Cl⁻",
+                net: "Ba²⁺ + SO₄²⁻ → BaSO₄↓",
+                particles: [
+                    { label: 'Ba²⁺', color: 'bg-emerald-500 text-white' },
+                    { label: 'SO₄²⁻', color: 'bg-indigo-500 text-white' },
+                    { label: 'BaSO₄↓', color: 'bg-slate-700 text-cyan-300 font-bold' },
+                    { label: 'H⁺', color: 'bg-red-500 text-white' },
+                    { label: 'Cl⁻', color: 'bg-cyan-500 text-white' }
+                ]
+            },
+            'gas': {
+                name: "აირის გამოყოფის რეაქცია",
+                desc: "ნატრიუმის კარბონატისა და მარილმჟავას ურთიერთქმედება (CO₂ აირი).",
+                icon: '<i class="fa-solid fa-wind"></i>',
+                molecular: "Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂↑",
+                full: "2Na⁺ + CO₃²⁻ + 2H⁺ + 2Cl⁻ → 2Na⁺ + 2Cl⁻ + H₂O + CO₂↑",
+                net: "2H⁺ + CO₃²⁻ → H₂O + CO₂↑",
+                particles: [
+                    { label: '2H⁺', color: 'bg-red-500 text-white' },
+                    { label: 'CO₃²⁻', color: 'bg-purple-500 text-white' },
+                    { label: 'CO₂↑', color: 'bg-emerald-600 text-white font-bold' },
+                    { label: 'H₂O', color: 'bg-indigo-600 text-white' }
+                ]
+            },
+            'weakacid': {
+                name: "სუსტი მჟავის გამოყოფა",
+                desc: "ძმარმჟავას ნატრიუმის მარილისა და მჟავას ურთიერთქმედება.",
+                icon: '<i class="fa-solid fa-vial"></i>',
+                molecular: "CH₃COONa + HCl → CH₃COOH + NaCl",
+                full: "CH₃COO⁻ + Na⁺ + H⁺ + Cl⁻ → CH₃COOH + Na⁺ + Cl⁻",
+                net: "CH₃COO⁻ + H⁺ → CH₃COOH",
+                particles: [
+                    { label: 'CH₃COO⁻', color: 'bg-purple-500 text-white' },
+                    { label: 'H⁺', color: 'bg-red-500 text-white' },
+                    { label: 'CH₃COOH', color: 'bg-amber-600 text-white' },
+                    { label: 'Na⁺', color: 'bg-amber-500 text-white' },
+                    { label: 'Cl⁻', color: 'bg-cyan-500 text-white' }
+                ]
+            }
+        };
+
+        function selectReaction(rxnKey) {
+            currentRxn = rxnKey;
+            ['neutralization', 'precipitate', 'gas', 'weakacid'].forEach(k => {
+                const btn = document.getElementById('rxn-btn-' + k);
+                if (!btn) return;
+                if (k === rxnKey) {
+                    btn.className = "p-4 rounded-2xl border border-indigo-500/40 bg-indigo-600/20 text-left transition-all shadow-md";
+                } else {
+                    btn.className = "p-4 rounded-2xl border border-slate-800 bg-slate-950 text-left transition-all hover:border-slate-700";
+                }
+            });
+            runSimulation();
+        }
+
+        function runSimulation() {
+            const data = rxnData[currentRxn];
+            if (!data) return;
+            document.getElementById('sim-name').innerText = data.name;
+            document.getElementById('sim-desc').innerText = data.desc;
+            document.getElementById('sim-icon').innerHTML = data.icon;
+            document.getElementById('eq-molecular').innerText = data.molecular;
+            document.getElementById('eq-full').innerText = data.full;
+            document.getElementById('eq-net').innerText = data.net;
+
+            const box = document.getElementById('sim-particles');
+            if (box) {
+                box.innerHTML = data.particles.map((p, idx) => `
+                    <div class="px-3.5 py-2 rounded-xl text-xs font-mono font-bold ${p.color} shadow-md animate-bounce" style="animation-duration: ${2 + (idx%3)*0.4}s;">
+                        ${p.label}
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.onload = function() {
+            runSimulation();
+        };
+    </script>
+</body>
+</html>
