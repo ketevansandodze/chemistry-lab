@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ჟანგვა-აღდგენითი რეაქციები - ინტერაქტიული გაკვეთილი</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            color: white;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.4); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(56,189,248,0.7); }
+    </style>
+</head>
+<body class="flex flex-col items-center py-8 px-4 md:px-8">
+
+    <header class="text-center mb-8 w-full max-w-6xl">
+        <div class="inline-block glass-panel px-6 py-2 rounded-full text-cyan-400 font-semibold text-sm mb-3 tracking-wider uppercase">
+            <span class="mr-2">⚡</span> ქიმიის ინტერაქტიული გაკვეთილი
+        </div>
+        <h1 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-3">
+            ჟანგვა-აღდგენითი რეაქციები
+        </h1>
+        <p class="text-gray-400 text-base max-w-2xl mx-auto">
+            შეისწავლეთ ელექტრონების გადაცემის მექანიზმი, ივარჯიშეთ ჟანგვის რიცხვების გამოთვლაში და შეამოწმეთ ცოდნა ინტერაქტიულ ტესტში.
+        </p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="flex flex-wrap justify-center gap-3 mb-8 w-full max-w-6xl">
+        <button onclick="switchTab('sim')" id="btn-sim" class="tab-btn active px-6 py-3 rounded-2xl font-semibold text-sm transition-all flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300">
+            <i class="fas fa-atom"></i> ინტერაქტიული სიმულაცია
+        </button>
+        <button onclick="switchTab('rules')" id="btn-rules" class="tab-btn px-6 py-3 rounded-2xl font-semibold text-sm transition-all flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300">
+            <i class="fas fa-calculator"></i> ჟანგვის რიცხვის წესები
+        </button>
+        <button onclick="switchTab('theory')" id="btn-theory" class="tab-btn px-6 py-3 rounded-2xl font-semibold text-sm transition-all flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300">
+            <i class="fas fa-book-open"></i> თეორიული მასალა (სახელმძღვანელო)
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn px-6 py-3 rounded-2xl font-semibold text-sm transition-all flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300">
+            <i class="fas fa-question-circle"></i> კითხვები და დავალებები
+        </button>
+    </nav>
+
+    <main class="w-full max-w-6xl">
+        
+        <!-- SECTION 1: SIMULATION -->
+        <section id="sec-sim" class="glass-panel rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-white/10">
+                <div>
+                    <h2 class="text-2xl font-bold text-cyan-400">ელექტრონების გადაცემის ვიზუალიზაცია</h2>
+                    <p class="text-gray-400 text-sm">დააკვირდით, როგორ კარგავს ელექტრონებს აღმდგენი (A) და იძენს მჟანგავი (B).</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="runSimReaction('mg_o2')" class="px-4 py-2 bg-cyan-500/20 border border-cyan-500/50 hover:bg-cyan-500/40 rounded-xl text-xs font-bold transition-all text-cyan-300">
+                        2Mg + O₂ → 2MgO
+                    </button>
+                    <button onclick="runSimReaction('mg_cl2')" class="px-4 py-2 bg-blue-500/20 border border-blue-500/50 hover:bg-blue-500/40 rounded-xl text-xs font-bold transition-all text-blue-300">
+                        Mg + Cl₂ → MgCl₂
+                    </button>
+                </div>
+            </div>
+
+            <!-- Simulation Stage -->
+            <div class="bg-black/40 rounded-2xl p-8 border border-white/5 flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden">
+                <div id="sim-canvas" class="w-full flex flex-wrap justify-around items-center gap-8 py-6">
+                    <!-- Dynamic atom representations -->
+                </div>
+                <div id="sim-message" class="text-center mt-6 text-sm font-mono text-yellow-300 bg-yellow-950/40 px-4 py-2 rounded-xl border border-yellow-500/30">
+                    აირჩიეთ რეაქცია ზემოთ მოცემული ღილაკებიდან!
+                </div>
+            </div>
+
+            <!-- Explanation Box -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-red-500/10 border border-red-500/30 p-5 rounded-2xl">
+                    <h3 class="text-red-400 font-bold mb-2 flex items-center">
+                        <i class="fas fa-minus-circle mr-2"></i> ჟანგვა (ელექტრონის გაცემა)
+                    </h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        პროცესი, რომლის დროსაც ატომი ან იონი <b>კარგავს</b> ელექტრონებს. ნივთიერებას, რომელიც კარგავს ელექტრონებს, <b>აღმდგენი</b> ეწოდება, ხოლო თვითონ პროცესში ის <b>იჟანგება</b> (მისი ჟანგვის რიცხვი იზრდება).
+                    </p>
+                </div>
+                <div class="bg-blue-500/10 border border-blue-500/30 p-5 rounded-2xl">
+                    <h3 class="text-blue-400 font-bold mb-2 flex items-center">
+                        <i class="fas fa-plus-circle mr-2"></i> აღდგენა (ელექტრონის მიერთება)
+                    </h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        პროცესი, რომლის დროსაც ატომი ან იონი <b>იძენს</b> ელექტრონებს. ნივთიერებას, რომელიც იერთებს ელექტრონებს, <b>მჟანგავი</b> ეწოდება, ხოლო თვითონ პროცესში ის <b>აღდგება</b> (მისი ჟანგვის რიცხვი მცირდება).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: RULES -->
+        <section id="sec-rules" class="glass-panel rounded-3xl p-6 md:p-8 space-y-6 hidden">
+            <div class="pb-6 border-b border-white/10">
+                <h2 class="text-2xl font-bold text-cyan-400 mb-2">ჟანგვის რიცხვის განსაზღვრის ძირითადი წესები</h2>
+                <p class="text-gray-400 text-sm">გაიხსენეთ სახელმძღვანელოდან მოცემული 10 ძირითადი წესი:</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center flex-shrink-0">1</span>
+                    <p class="text-sm text-gray-300">მარტივ ნივთიერებებში ატომების ჟანგვის რიცხვი <b>ნულის ტოლია</b>: <span class="font-mono text-cyan-300">Mg, O₂, N₂, Ar (ტოლია 0)</span>.</p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center flex-shrink-0">2</span>
+                    <p class="text-sm text-gray-300">მარტივ (ერთატომიან) იონებში ჟანგვის რიცხვი <b>იგივეა, რაც იონის მუხტი</b>: <span class="font-mono text-cyan-300">Mg²⁺ (+2), O²⁻ (-2), N³⁻ (-3)</span>.</p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center flex-shrink-0">3</span>
+                    <p class="text-sm text-gray-300">მოლეკულაში შემავალი ელემენტების ჟანგვის რიცხვების ალგებრული ჯამი <b>ნულის ტოლია</b>. (მაგ: <span class="font-mono text-cyan-300">H₂SO₄</span>).</p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center flex-shrink-0">4</span>
+                    <p class="text-sm text-gray-300">ფთორის, როგორც ყველაზე ელექტროუარყოფითი ელემენტის, ჟანგვის რიცხვი ყოველთვის <b>-1</b>-ის ტოლია (<span class="font-mono text-cyan-300">NaF, CaF₂</span>).</p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center flex-shrink-0">5</span>
+                    <p class="text-sm text-gray-300">წყალბადის ჟანგვის რიცხვი არამეტალებთან არის <b>+1</b>, ხოლო ლითონთა ჰიდრიდებში <span class="font-mono text-cyan-300">-1</span> (<span class="font-mono text-cyan-300">HCl, NaH</span>).</p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center flex-shrink-0">6</span>
+                    <p class="text-sm text-gray-300">ჟანგბადის ჟანგვის რიცხვი ძირითადად არის <b>-2</b>. გამონაკლისებია: პეროქსიდები (<span class="font-mono text-cyan-300">-1</span>) და <span class="font-mono text-cyan-300">OF₂ (+2)</span>.</p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center flex-shrink-0">7</span>
+                    <p class="text-sm text-gray-300">I და II ჯგუფის ლითონებისა და ალუმინის ჟანგვის რიცხვი დადებითია და რიცხობრივად უდრის ვალენტურ ელექტრონთა რაოდენობას (<span class="font-mono text-cyan-300">K₂S, MgÓ, AlCl₃</span>).</p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center flex-shrink-0">8-10</span>
+                    <p class="text-sm text-gray-300">გარდამავალ ლითონებსა და არამეტალებს სხვადასხვა ნაერთში შესაძლოა ჰქონდეთ <b>ცვალებადი ჟანგვის რიცხვი</b>. რთულ იონში ჯამი უდრის იონის მუხტს (<span class="font-mono text-cyan-300">SO₄²⁻</span> ჯამი = -2).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THEORY -->
+        <section id="sec-theory" class="glass-panel rounded-3xl p-6 md:p-8 space-y-6 hidden">
+            <div class="pb-6 border-b border-white/10 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-cyan-400 mb-1">თეორიული მასალა (სახელმძღვანელოდან)</h2>
+                    <p class="text-gray-400 text-sm">თავი 2. ელექტროქიმია, ჟანგვა-აღდგენის რეაქციები (გვ. 71-74)</p>
+                </div>
+            </div>
+
+            <div class="space-y-6 text-gray-300 text-sm leading-relaxed">
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center">
+                        <i class="fas fa-fire text-amber-400 mr-2"></i> ჟანგვის პროცესები ყოველდღიურობაში
+                    </h3>
+                    <p>
+                        ყოველდღიურ ცხოვრებაში ხშირად ვხვდებით ჟანგვის მაგალითებს. ალბათ, შეგინიშნავთ დაჟანგული ლურსმანი, გამავალშებული ვერცხლის ნაკეთობა, ან გაჭრილი ვაშლის ზედაპირზე წარმოქმნილი მუქი შეფერილობა — ეს ყველაფერი ჟანგვის პროცესს უკავშირდება.
+                    </p>
+                    <p>
+                        ადრე ჟანგვას მიიჩნევდნენ, როგორც ჟანგბადის მიერთებას (ან წყალბადის დაკარგვას), ხოლო საპირისპირო პროცესს — ჟანგბადის დაკარგვას (ან წყალბადის მიერთებას) აღდგენას უწოდებდნენ. შესაბამისად, რეაქციებში:
+                    </p>
+                    <div class="font-mono bg-black/40 p-3 rounded-xl text-cyan-300 text-center">
+                        C + O₂ → CO₂ <br>
+                        2Ca + O₂ → 2CaO
+                    </div>
+                    <p>
+                        ნახშირბადი და კალციუმი იჟანგება. თუმცა მოგვიანებით აღმოაჩინეს, რომ ჟანგბადი ყოველთვის არ მონაწილეობს ჟანგვის პროცესში, ამიტომ ძველი განმარტება შეიცვალა:
+                    </p>
+                    <div class="bg-cyan-950/40 p-4 rounded-xl border border-cyan-500/30 text-cyan-200 font-semibold text-center">
+                        თანამედროვე განსაზღვრებით: <b>ჟანგვა</b> არის ელექტრონების გაცემის პროცესი, ხოლო <b>აღდგენა</b> — ელექტრონების მიერთების პროცესი.
+                    </div>
+                </div>
+
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center">
+                        <i class="fas fa-balance-scale text-emerald-400 mr-2"></i> ვალენტობა და ჟანგვის რიცხვი
+                    </h3>
+                    <p>
+                        ვალენტობა და ჟანგვის რიცხვი ერთი და იგივე არ არის. ზოგჯერ მათი რიცხვითი მნიშვნელობები არ ემთხვევა ერთმანეთს. მაგალითად, წყალბადის პეროქსიდში (<span class="font-mono text-cyan-300">H₂O₂</span>) ჟანგბადის ვალენტობაა 2, ხოლო ჟანგვის რიცხვი — -1.
+                    </p>
+                    <div class="bg-black/40 p-4 rounded-xl font-mono text-xs text-cyan-200 space-y-2">
+                        <p>• მაგალითად, Na₂SO₄-ში გოგირდის ჟანგვის რიცხვის გამოსათვლელად ვადგენთ განტოლებას: 2·(+1) + x + 4·(-2) = 0 ⇒ 2 + x - 8 = 0, საიდანაც x = +6.</p>
+                        <p>• KMnO₄-ში მანგანუმის ჟანგვის რიცხვია: 1 + x - 8 = 0 ⇒ x = +7.</p>
+                        <p>• KClO₃-ში Cl-ის ჟანგვის რიცხვია: 1 + x - 6 = 0 ⇒ x = +5.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: QUIZ & TASKS -->
+        <section id="sec-quiz" class="glass-panel rounded-3xl p-6 md:p-8 space-y-6 hidden">
+            <div class="pb-6 border-b border-white/10">
+                <h2 class="text-2xl font-bold text-cyan-400 mb-1">კითხვები და დავალებები (გვ. 74)</h2>
+                <p class="text-gray-400 text-sm">შეამოწმეთ თქვენი ცოდნა ინტერაქტიული კითხვარით!</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Question 1 -->
+                <div class="bg-white/5 p-5 rounded-2xl border border-white/5 space-y-3">
+                    <h3 class="font-bold text-white">1. შეიძლება თუ არა ჟანგვა მიმდინარეობდეს აღდგენის გარეშე?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button onclick="checkAnswer(this, false, 'არა, ჟანგვა და აღდგენა ყოველთვის ერთად მიმდინარეობს (ერთი კარგავს, მეორე იერთებს).')" class="p-3 bg-black/30 hover:bg-white/10 border border-white/10 rounded-xl text-left text-sm transition-all">
+                            ა) კი, შესაძლებელია
+                        </button>
+                        <button onclick="checkAnswer(this, true, 'სწორია! ჟანგვა და აღდგენა ერთიანი ჟანგვა-აღდგენითი რეაქციის ორი ურთიერთდაკავშირებული მხარეა.')" class="p-3 bg-black/30 hover:bg-white/10 border border-white/10 rounded-xl text-left text-sm transition-all">
+                            ბ) არა, ისინი განუყოფელია
+                        </button>
+                    </div>
+                    <div class="quiz-feedback text-xs font-semibold mt-2 hidden"></div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-white/5 p-5 rounded-2xl border border-white/5 space-y-3">
+                    <h3 class="font-bold text-white">2. განსაზღვრეთ გოგირდის ჟანგვის რიცხვი ნაერთში: H₂SO₄</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <button onclick="checkAnswer(this, false, 'არასწორია. შეამოწმეთ: 2·(+1) + x + 4·(-2) = 0')" class="p-3 bg-black/30 hover:bg-white/10 border border-white/10 rounded-xl text-center text-sm transition-all font-mono">
+                            +4
+                        </button>
+                        <button onclick="checkAnswer(this, true, 'სწორია! H (+1) · 2 + S (+6) + O (-2) · 4 = 0')" class="p-3 bg-black/30 hover:bg-white/10 border border-white/10 rounded-xl text-center text-sm transition-all font-mono">
+                            +6
+                        </button>
+                        <button onclick="checkAnswer(this, false, 'არასწორია.')" class="p-3 bg-black/30 hover:bg-white/10 border border-white/10 rounded-xl text-center text-sm transition-all font-mono">
+                            +2
+                        </button>
+                        <button onclick="checkAnswer(this, false, 'არასწორია.')" class="p-3 bg-black/30 hover:bg-white/10 border border-white/10 rounded-xl text-center text-sm transition-all font-mono">
+                            -2
+                        </button>
+                    </div>
+                    <div class="quiz-feedback text-xs font-semibold mt-2 hidden"></div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-white/5 p-5 rounded-2xl border border-white/5 space-y-3">
+                    <h3 class="font-bold text-white">3. რას უდრის ატომის ჟანგვის რიცხვი მარტივ ნივთიერებებში (მაგ: O₂, N₂, Mg)?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <button onclick="checkAnswer(this, false, 'არასწორია.')" class="p-3 bg-black/30 hover:bg-white/10 border border-white/10 rounded-xl text-center text-sm transition-all">
+                            +1
+                        </button>
+                        <button onclick="checkAnswer(this, true, 'სწორია! მარტივ ნივთიერებებში ჟანგვის რიცხვი ყოველთვის ნულის ტოლია.')" class="p-3 bg-black/30 hover:bg-white/10 border border-white/10 rounded-xl text-center text-sm transition-all">
+                            0
+                        </button>
+                        <button onclick="checkAnswer(this, false, 'არასწორია.')" class="p-3 bg-black/30 hover:bg-white/10 border border-white/10 rounded-xl text-center text-sm transition-all">
+                            -1
+                        </button>
+                    </div>
+                    <div class="quiz-feedback text-xs font-semibold mt-2 hidden"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('sec-' + tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+        }
+
+        // Simulation reactions logic
+        function runSimReaction(type) {
+            const canvas = document.getElementById('sim-canvas');
+            const msg = document.getElementById('sim-message');
+            canvas.innerHTML = '';
+
+            if(type === 'mg_o2') {
+                canvas.innerHTML = `
+                    <div class="flex flex-col items-center p-4 bg-white/5 rounded-2xl border border-cyan-500/30 animate-pulse">
+                        <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-xl font-bold text-cyan-400 border-2 border-cyan-400">Mg</div>
+                        <span class="text-xs mt-2 text-gray-300">მაგნიუმი (აღმდგენი)</span>
+                        <span class="text-[10px] text-red-400 font-mono mt-1">კარგავს 2e⁻ (იჟანგება)</span>
+                    </div>
+                    <div class="text-2xl text-cyan-400 font-bold">+</div>
+                    <div class="flex flex-col items-center p-4 bg-white/5 rounded-2xl border border-blue-500/30 animate-pulse">
+                        <div class="w-16 h-16 rounded-full bg-blue-950 flex items-center justify-center text-xl font-bold text-blue-400 border-2 border-blue-400">O₂</div>
+                        <span class="text-xs mt-2 text-gray-300">ჟანგბადი (მჟანგავი)</span>
+                        <span class="text-[10px] text-blue-400 font-mono mt-1">იერთებს 2e⁻ (აღდგება)</span>
+                    </div>
+                    <div class="text-2xl text-cyan-400 font-bold">→</div>
+                    <div class="flex flex-col items-center p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/40">
+                        <div class="text-lg font-bold text-emerald-400">2MgO</div>
+                        <span class="text-xs mt-2 text-emerald-300">მაგნიუმის ოქსიდი</span>
+                    </div>
+                `;
+                msg.innerHTML = "<b>2Mg + O₂ → 2MgO:</b> მაგნიუმი გასცემს ელექტრონებს (იჟანგება), ხოლო ჟანგბადი იერთებს (აღდგება).";
+            } else if(type === 'mg_cl2') {
+                canvas.innerHTML = `
+                    <div class="flex flex-col items-center p-4 bg-white/5 rounded-2xl border border-cyan-500/30 animate-pulse">
+                        <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-xl font-bold text-cyan-400 border-2 border-cyan-400">Mg</div>
+                        <span class="text-xs mt-2 text-gray-300">მაგნიუმი (მეტალი)</span>
+                        <span class="text-[10px] text-red-400 font-mono mt-1">გასცემს 2e⁻</span>
+                    </div>
+                    <div class="text-2xl text-cyan-400 font-bold">+</div>
+                    <div class="flex flex-col items-center p-4 bg-white/5 rounded-2xl border border-yellow-500/30 animate-pulse">
+                        <div class="w-16 h-16 rounded-full bg-yellow-950 flex items-center justify-center text-xl font-bold text-yellow-400 border-2 border-yellow-400">Cl₂</div>
+                        <span class="text-xs mt-2 text-gray-300">ქლორი (არამეტალი)</span>
+                        <span class="text-[10px] text-blue-400 font-mono mt-1">იერთებს e⁻</span>
+                    </div>
+                    <div class="text-2xl text-cyan-400 font-bold">→</div>
+                    <div class="flex flex-col items-center p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/40">
+                        <div class="text-lg font-bold text-emerald-400">MgCl₂</div>
+                        <span class="text-xs mt-2 text-emerald-300">მაგნიუმის ქლორიდი</span>
+                    </div>
+                `;
+                msg.innerHTML = "<b>Mg + Cl₂ → MgCl₂:</b> მეტალი (Mg) გასცემს ელექტრონებს, არამეტალი (Cl) იერთებს მათ იონური ბმის წარმოქმნით.";
+            }
+        }
+
+        // Quiz check logic
+        function checkAnswer(btn, isCorrect, explanation) {
+            const container = btn.parentElement.parentElement;
+            const feedback = container.querySelector('.quiz-feedback');
+            
+            // Reset buttons in group
+            container.querySelectorAll('button').forEach(b => {
+                b.classList.remove('bg-emerald-500/30', 'border-emerald-500', 'bg-red-500/30', 'border-red-500');
+            });
+
+            feedback.classList.remove('hidden');
+            if(isCorrect) {
+                btn.classList.add('bg-emerald-500/30', 'border-emerald-500');
+                feedback.className = "quiz-feedback text-xs font-semibold mt-2 text-emerald-400";
+                feedback.innerHTML = `<i class="fas fa-check-circle mr-1"></i> ${explanation}`;
+            } else {
+                btn.classList.add('bg-red-500/30', 'border-red-500');
+                feedback.className = "quiz-feedback text-xs font-semibold mt-2 text-rose-400";
+                feedback.innerHTML = `<i class="fas fa-times-circle mr-1"></i> ${explanation}`;
+            }
+        }
+
+        // Initialize default sim view
+        window.onload = () => {
+            runSimReaction('mg_o2');
+        };
+    </script>
+</body>
+</html>
